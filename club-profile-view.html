@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club Profile - Grant Professionals Portal</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --color-primary: #0F172A; --color-accent: #3B82F6; --color-success: #059669; --color-warning: #D97706; --color-danger: #DC2626; --color-border: #E2E8F0; --color-text: #0F172A; --color-text-secondary: #64748B; --color-text-muted: #94A3B8; --color-bg: #FFFFFF; --color-bg-secondary: #F8FAFC; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif; background: var(--color-bg-secondary); color: var(--color-text); line-height: 1.5; }
+        .header { background: var(--color-bg); border-bottom: 1px solid var(--color-border); }
+        .header-content { max-width: 1400px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 0.875rem; font-weight: 600; display: flex; align-items: center; gap: 0.75rem; }
+        .logo-icon { width: 32px; height: 32px; background: var(--color-primary); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.875rem; }
+        .user-info { font-size: 0.875rem; color: var(--color-text-secondary); display: flex; align-items: center; gap: 1rem; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+        .breadcrumb { font-size: 0.8125rem; color: var(--color-text-secondary); margin-bottom: 1.5rem; }
+        .breadcrumb a { color: var(--color-accent); text-decoration: none; }
+        .club-header { background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem; }
+        .club-header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; }
+        .club-info { display: flex; gap: 1.5rem; align-items: flex-start; }
+        .club-avatar { width: 72px; height: 72px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        .club-details h1 { font-size: 1.5rem; font-weight: 600; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+        .club-details p { font-size: 0.9375rem; color: var(--color-text-secondary); margin-top: 0.25rem; }
+        .subscription-badge { display: inline-flex; padding: 0.25rem 0.625rem; font-size: 0.75rem; font-weight: 600; border-radius: 4px; text-transform: uppercase; background: linear-gradient(135deg, #6366F1, #8B5CF6); color: white; }
+        .club-actions { display: flex; gap: 0.75rem; }
+        .club-meta-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border); }
+        .meta-item { display: flex; flex-direction: column; gap: 0.25rem; }
+        .meta-label { font-size: 0.75rem; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
+        .meta-value { font-size: 0.9375rem; font-weight: 500; }
+        .meta-value a { color: var(--color-accent); text-decoration: none; }
+        .tabs { display: flex; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 12px 12px 0 0; border-bottom: none; padding: 0 1rem; }
+        .tab { padding: 1rem 1.5rem; font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; background: none; border-top: none; border-left: none; border-right: none; }
+        .tab:hover { color: var(--color-text); }
+        .tab.active { color: var(--color-accent); border-bottom-color: var(--color-accent); }
+        .tab-count { background: var(--color-bg-secondary); padding: 0.125rem 0.5rem; border-radius: 10px; font-size: 0.75rem; margin-left: 0.5rem; }
+        .tab.active .tab-count { background: #DBEAFE; color: #1E40AF; }
+        .tab-content { display: none; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 0 0 12px 12px; padding: 2rem; }
+        .tab-content.active { display: block; }
+        .info-section { margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid var(--color-border); }
+        .info-section:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+        .info-section-title { font-size: 1rem; font-weight: 600; margin-bottom: 1.25rem; }
+        .info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+        .info-grid.two-col { grid-template-columns: repeat(2, 1fr); }
+        .info-item { display: flex; flex-direction: column; gap: 0.25rem; }
+        .info-item.full-width { grid-column: 1 / -1; }
+        .info-label { font-size: 0.75rem; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
+        .info-value { font-size: 0.9375rem; }
+        .info-value a { color: var(--color-accent); text-decoration: none; }
+        .checkbox-list { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.25rem; }
+        .checkbox-tag { display: inline-flex; padding: 0.25rem 0.625rem; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 4px; font-size: 0.8125rem; color: var(--color-text-secondary); }
+        .checkbox-tag.checked { background: #DBEAFE; border-color: #93C5FD; color: #1E40AF; }
+        .checkbox-tag.checked::before { content: '✓ '; }
+        .wishlist-category { margin-bottom: 1.5rem; }
+        .wishlist-category-title { font-size: 0.8125rem; font-weight: 600; margin-bottom: 0.75rem; text-transform: uppercase; }
+        .wishlist-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .wishlist-tag { display: inline-flex; padding: 0.375rem 0.75rem; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 6px; font-size: 0.8125rem; color: var(--color-text-secondary); }
+        .wishlist-tag.selected { background: #DBEAFE; border-color: #93C5FD; color: #1E40AF; }
+        .wishlist-tag.selected::before { content: '✓ '; }
+        .files-folder-section { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 1.5rem; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; }
+        .folder-info { display: flex; align-items: center; gap: 1rem; }
+        .folder-icon { font-size: 2rem; }
+        .folder-name { font-weight: 500; font-size: 0.9375rem; }
+        .folder-meta { font-size: 0.8125rem; color: var(--color-text-secondary); }
+        .grants-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .grants-header h2 { font-size: 1.125rem; font-weight: 600; }
+        .grants-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .grants-tab { padding: 0.5rem 1rem; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 6px; font-size: 0.8125rem; font-weight: 500; color: var(--color-text-secondary); cursor: pointer; }
+        .grants-tab.active { background: var(--color-accent); color: white; border-color: var(--color-accent); }
+        .grant-card { background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 12px; margin-bottom: 1.5rem; overflow: hidden; }
+        .grant-card-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--color-border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+        .grant-card-info { display: flex; align-items: center; gap: 1rem; }
+        .grant-card-icon { width: 40px; height: 40px; background: #DBEAFE; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+        .grant-card-title { font-weight: 600; font-size: 1rem; }
+        .grant-card-subtitle { font-size: 0.8125rem; color: var(--color-text-secondary); }
+        .grant-card-meta { display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap; }
+        .grant-meta-item { text-align: right; }
+        .grant-meta-label { font-size: 0.6875rem; color: var(--color-text-muted); text-transform: uppercase; }
+        .grant-meta-value { font-size: 0.875rem; font-weight: 500; }
+        .grant-meta-value.urgent { color: var(--color-danger); }
+        .status-badge { display: inline-flex; padding: 0.25rem 0.625rem; border-radius: 4px; font-size: 0.75rem; font-weight: 500; }
+        .status-enquiry { background: #E0F2FE; color: #0369A1; }
+        .status-proceeding { background: #FEF3C7; color: #92400E; }
+        .status-lodged { background: #DBEAFE; color: #1E40AF; }
+        .status-stage2 { background: #E0E7FF; color: #3730A3; }
+        .status-won { background: #D1FAE5; color: #065F46; }
+        .status-lost { background: #FEE2E2; color: #991B1B; }
+        .status-open-match { background: #F0FDF4; color: #166534; }
+        .interest-badge { display: inline-flex; padding: 0.25rem 0.625rem; border-radius: 4px; font-size: 0.75rem; font-weight: 500; }
+        .interest-interested { background: #D1FAE5; color: #065F46; }
+        .interest-need-info { background: #FEF3C7; color: #92400E; }
+        .interest-not-interested { background: #F1F5F9; color: #64748B; }
+        .pending-table-container { padding: 1.25rem 1.5rem; background: #FFFBEB; border-top: 3px solid #FCD34D; }
+        .pending-table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem; }
+        .pending-table-title { font-size: 0.875rem; font-weight: 600; color: #92400E; display: flex; align-items: center; gap: 0.5rem; }
+        .pending-count-badge { background: #FCD34D; color: #78350F; padding: 0.125rem 0.5rem; border-radius: 10px; font-size: 0.75rem; font-weight: 600; }
+        .pending-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; border: 1px solid #FCD34D; }
+        .pending-table thead { background: #FEF3C7; }
+        .pending-table th { padding: 0.75rem 1rem; text-align: left; font-weight: 500; color: #92400E; font-size: 0.75rem; text-transform: uppercase; border-bottom: 1px solid #FCD34D; }
+        .pending-table td { padding: 0.875rem 1rem; font-size: 0.875rem; vertical-align: top; border-bottom: 1px solid #FEF3C7; }
+        .pending-table tbody tr:last-child td { border-bottom: none; }
+        .item-name { font-weight: 500; }
+        .item-description { font-size: 0.8125rem; color: var(--color-text-secondary); margin-top: 0.25rem; }
+        .type-badge { display: inline-flex; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 500; }
+        .type-file { background: #DBEAFE; color: #1E40AF; }
+        .type-confirm { background: #D1FAE5; color: #065F46; }
+        .type-text { background: #FEF3C7; color: #92400E; }
+        .status-indicator { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.25rem 0.625rem; border-radius: 12px; font-size: 0.75rem; font-weight: 500; }
+        .status-pending { background: #FEE2E2; color: #DC2626; }
+        .status-pending::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #DC2626; }
+        .status-received { background: #D1FAE5; color: #059669; }
+        .status-received::before { content: '✓ '; }
+        .notes-text { font-size: 0.8125rem; color: var(--color-text-secondary); font-style: italic; }
+        .actions-cell { display: flex; gap: 0.25rem; }
+        .icon-btn { padding: 0.375rem; border: none; background: none; cursor: pointer; color: var(--color-text-muted); font-size: 0.875rem; border-radius: 4px; }
+        .icon-btn:hover { background: var(--color-bg-secondary); color: var(--color-text); }
+        .btn { padding: 0.5rem 1rem; border: 1px solid var(--color-border); border-radius: 6px; font-size: 0.8125rem; font-weight: 500; cursor: pointer; background: var(--color-bg); color: var(--color-text); display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; }
+        .btn:hover { background: var(--color-bg-secondary); }
+        .btn-primary { background: var(--color-accent); color: white; border-color: var(--color-accent); }
+        .btn-success { background: var(--color-success); color: white; border-color: var(--color-success); }
+        .btn-warning { background: #F59E0B; color: white; border-color: #F59E0B; }
+        .btn-sm { padding: 0.375rem 0.75rem; font-size: 0.75rem; }
+        .interest-row { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; background: var(--color-bg-secondary); flex-wrap: wrap; gap: 0.75rem; }
+        .interest-info { display: flex; align-items: center; gap: 0.75rem; }
+        .interest-actions { display: flex; gap: 0.5rem; }
+        .invoice-status { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.25rem 0.625rem; border-radius: 4px; font-size: 0.75rem; font-weight: 500; }
+        .invoice-pending { background: #FEF3C7; color: #92400E; }
+        .invoice-sent { background: #DBEAFE; color: #1E40AF; }
+        .invoice-paid { background: #D1FAE5; color: #065F46; }
+        .won-details { padding: 1rem 1.5rem; background: #ECFDF5; border-top: 2px solid #10B981; }
+        .won-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+        .won-item { }
+        .won-label { font-size: 0.6875rem; color: var(--color-text-muted); text-transform: uppercase; margin-bottom: 0.25rem; }
+        .won-value { font-size: 0.875rem; font-weight: 500; }
+        @media (max-width: 1024px) { .club-meta-grid { grid-template-columns: repeat(3, 1fr); } .info-grid { grid-template-columns: repeat(2, 1fr); } .won-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 768px) { .container { padding: 1rem; } .club-meta-grid, .info-grid, .won-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo"><div class="logo-icon">GP</div>Grant Professionals Portal</div>
+            <div class="user-info">Sarah Williams · Grant Writer</div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="breadcrumb"><a href="staff-dashboard.html">Dashboard</a> › Ryde Saints Junior Football Club</div>
+        <div class="club-header">
+            <div class="club-header-top">
+                <div class="club-info">
+                    <div class="club-avatar">🏉</div>
+                    <div class="club-details">
+                        <h1>Ryde Saints Junior Football Club <span class="subscription-badge">Grant Ready Plan</span></h1>
+                        <p>AFL · City of Ryde, NSW</p>
+                    </div>
+                </div>
+                <div class="club-actions">
+                    <a href="club-admin-portal-edit.html" class="btn">✏️ Edit Club Details</a>
+                    <button class="btn">📁 Files</button>
+                </div>
+            </div>
+            <div class="club-meta-grid">
+                <div class="meta-item"><span class="meta-label">Account Executive</span><span class="meta-value">John Smith</span></div>
+                <div class="meta-item"><span class="meta-label">Primary Contact</span><span class="meta-value"><a href="mailto:rebecca@rydesaints.com.au">Rebecca Pezzutti</a></span></div>
+                <div class="meta-item"><span class="meta-label">Active Grants</span><span class="meta-value">3 applications</span></div>
+                <div class="meta-item"><span class="meta-label">Pending Items</span><span class="meta-value" style="color:#D97706">7 items</span></div>
+                <div class="meta-item"><span class="meta-label">Last Login</span><span class="meta-value" style="color:#059669">2 hours ago</span></div>
+            </div>
+        </div>
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('info')">Club Information</button>
+            <button class="tab" onclick="showTab('grants')">Grant Opportunities <span class="tab-count">6</span></button>
+        </div>
+        <div class="tab-content active" id="tab-info">
+            <div class="info-section">
+                <h3 class="info-section-title">Organisation Identity & Legal Status</h3>
+                <div class="info-grid">
+                    <div class="info-item"><span class="info-label">Legal Entity Name</span><span class="info-value">Ryde Saints Junior Football Club Inc</span></div>
+                    <div class="info-item"><span class="info-label">Shortened Name</span><span class="info-value">Ryde Saints JFC</span></div>
+                    <div class="info-item"><span class="info-label">ABN</span><span class="info-value">12 345 678 901</span></div>
+                    <div class="info-item"><span class="info-label">GST Number</span><span class="info-value">Not registered</span></div>
+                    <div class="info-item"><span class="info-label">ACN/Incorporation Number</span><span class="info-value">INC9876543</span></div>
+                    <div class="info-item"><span class="info-label">DGR Endorsed</span><span class="info-value">No</span></div>
+                    <div class="info-item"><span class="info-label">ACNC Registration</span><span class="info-value">Not applicable</span></div>
+                    <div class="info-item"><span class="info-label">Entity Type</span><span class="info-value">Incorporated not-for-profit organisation</span></div>
+                    <div class="info-item"><span class="info-label">Tax Concessions</span><div class="checkbox-list"><span class="checkbox-tag checked">Income tax exempt</span><span class="checkbox-tag">GST concessions</span><span class="checkbox-tag">FBT concessions</span></div></div>
+                </div>
+            </div>
+            <div class="info-section">
+                <h3 class="info-section-title">Address & Location Details</h3>
+                <div class="info-grid">
+                    <div class="info-item full-width"><span class="info-label">Organisation Physical Address</span><span class="info-value">123 Sports Avenue, Ryde NSW 2112, Australia</span></div>
+                    <div class="info-item"><span class="info-label">Postal Same as Org?</span><span class="info-value">Yes</span></div>
+                    <div class="info-item"><span class="info-label">Activity Same as Org?</span><span class="info-value">No</span></div>
+                    <div class="info-item full-width"><span class="info-label">Primary Activity/Facility Address</span><span class="info-value">ELS Hall Park, Marsfield NSW 2122</span></div>
+                    <div class="info-item"><span class="info-label">Local Government Area</span><span class="info-value">City of Ryde</span></div>
+                </div>
+            </div>
+            <div class="info-section">
+                <h3 class="info-section-title">Primary & Secondary Contacts</h3>
+                <div class="info-grid two-col">
+                    <div class="info-item"><span class="info-label">Primary Contact</span><span class="info-value">Rebecca Pezzutti (Club Secretary)</span></div>
+                    <div class="info-item"><span class="info-label">Secondary Contact</span><span class="info-value">Michael Chen (Club President)</span></div>
+                    <div class="info-item"><span class="info-label">Email</span><span class="info-value"><a href="mailto:rebecca@rydesaints.com.au">rebecca@rydesaints.com.au</a></span></div>
+                    <div class="info-item"><span class="info-label">Email</span><span class="info-value"><a href="mailto:michael@rydesaints.com.au">michael@rydesaints.com.au</a></span></div>
+                    <div class="info-item"><span class="info-label">Phone / Mobile</span><span class="info-value">(02) 9876 5432 / 0423 456 789</span></div>
+                    <div class="info-item"><span class="info-label">Phone / Mobile</span><span class="info-value">(02) 9876 5433 / 0434 567 890</span></div>
+                    <div class="info-item"><span class="info-label">Authorised for Applications?</span><span class="info-value">Yes</span></div>
+                    <div class="info-item"><span class="info-label">Authorised for Decisions?</span><span class="info-value">Yes</span></div>
+                </div>
+            </div>
+            <div class="info-section">
+                <h3 class="info-section-title">Organisation Overview</h3>
+                <div class="info-grid">
+                    <div class="info-item full-width"><span class="info-label">About the Organisation</span><span class="info-value">Ryde Saints JFC was established in 1985, serving the Ryde community for nearly 40 years with AFL programs for children aged 5-17.</span></div>
+                    <div class="info-item full-width"><span class="info-label">Key Issues / Priorities</span><span class="info-value">1. Upgrade clubroom facilities 2. Purchase defibrillators 3. Expand girls' football 4. Improve spectator amenities</span></div>
+                    <div class="info-item full-width"><span class="info-label">Proposed Projects Summary</span><span class="info-value">Shade structures, portable defibrillators, LED lighting upgrade, female-friendly change rooms</span></div>
+                    <div class="info-item full-width"><span class="info-label">Purpose / Mission</span><span class="info-value">To provide a safe, inclusive environment for young people to learn and play Australian Rules Football.</span></div>
+                    <div class="info-item"><span class="info-label">Sports/Activities</span><div class="checkbox-list"><span class="checkbox-tag checked">Australian Rules Football</span></div></div>
+                    <div class="info-item"><span class="info-label">League Affiliation</span><span class="info-value">AFL NSW/ACT, Sydney Junior Football League</span></div>
+                    <div class="info-item"><span class="info-label">Membership Data</span><span class="info-value"><a href="#">Club by Numbers Spreadsheet ↗</a></span></div>
+                </div>
+            </div>
+            <div class="info-section">
+                <h3 class="info-section-title">Financial Data</h3>
+                <div class="info-grid">
+                    <div class="info-item"><span class="info-label">Bank Account in Org Name?</span><span class="info-value">Yes</span></div>
+                    <div class="info-item"><span class="info-label">Account Name</span><span class="info-value">Ryde Saints JFC Inc</span></div>
+                    <div class="info-item"><span class="info-label">BSB / Account</span><span class="info-value">***-*** / ****4567 🔒</span></div>
+                    <div class="info-item"><span class="info-label">Previous Grant Experience?</span><span class="info-value">Yes</span></div>
+                    <div class="info-item"><span class="info-label">Outstanding Acquittals?</span><span class="info-value">No</span></div>
+                </div>
+            </div>
+            <div class="info-section">
+                <h3 class="info-section-title">Communications & Public Presence</h3>
+                <div class="info-grid">
+                    <div class="info-item"><span class="info-label">Website</span><span class="info-value"><a href="#">www.rydesaintsjfc.com.au</a></span></div>
+                    <div class="info-item"><span class="info-label">Facebook</span><span class="info-value"><a href="#">facebook.com/rydesaintsjfc</a></span></div>
+                    <div class="info-item"><span class="info-label">Instagram</span><span class="info-value"><a href="#">@rydesaintsjfc</a></span></div>
+                </div>
+            </div>
+            <div class="info-section">
+                <h3 class="info-section-title">Funding Wishlist (Grant Matching)</h3>
+                <p style="font-size:0.8125rem;color:var(--color-text-secondary);margin-bottom:1.25rem;">Items selected for potential grant matching.</p>
+                <div class="wishlist-category"><h4 class="wishlist-category-title">Equipment & Safety</h4><div class="wishlist-tags"><span class="wishlist-tag selected">Defibrillator</span><span class="wishlist-tag selected">First Aid Equipment</span><span class="wishlist-tag selected">Training Equipment</span><span class="wishlist-tag selected">Uniforms / Attire</span></div></div>
+                <div class="wishlist-category"><h4 class="wishlist-category-title">Programs & Participation</h4><div class="wishlist-tags"><span class="wishlist-tag selected">Junior Participation Programs</span><span class="wishlist-tag selected">Female Participation Programs</span><span class="wishlist-tag selected">Coaching Development</span></div></div>
+                <div class="wishlist-category"><h4 class="wishlist-category-title">Pavilions & Amenities</h4><div class="wishlist-tags"><span class="wishlist-tag selected">Female Friendly Change Rooms</span><span class="wishlist-tag selected">Kitchen / Canteen Upgrades</span></div></div>
+                <div class="wishlist-category"><h4 class="wishlist-category-title">Access & Public Areas</h4><div class="wishlist-tags"><span class="wishlist-tag selected">Spectator Seating</span><span class="wishlist-tag selected">Permanent Shade Structures</span></div></div>
+            </div>
+            <div class="info-section">
+                <h3 class="info-section-title">Club Files, Photos & Documents</h3>
+                <div class="files-folder-section">
+                    <div class="folder-info"><div class="folder-icon">📁</div><div><div class="folder-name">Ryde Saints JFC Files</div><div class="folder-meta">12 files · Last updated Jan 10, 2026</div></div></div>
+                    <button class="btn">Open Folder</button>
+                </div>
+            </div>
+        </div>
+        <div class="tab-content" id="tab-grants">
+            <div class="grants-header"><h2>Grant Opportunities</h2><button class="btn btn-primary">+ Add Grant Opportunity</button></div>
+            <div class="grants-tabs">
+                <button class="grants-tab active">All <span class="tab-count">6</span></button>
+                <button class="grants-tab">Open Match <span class="tab-count">1</span></button>
+                <button class="grants-tab">Proceeding <span class="tab-count">2</span></button>
+                <button class="grants-tab">Lodged <span class="tab-count">1</span></button>
+                <button class="grants-tab">Stage 2 Application <span class="tab-count">0</span></button>
+                <button class="grants-tab">Won <span class="tab-count">1</span></button>
+                <button class="grants-tab">Lost <span class="tab-count">1</span></button>
+            </div>
+
+            <!-- Open Match Grant -->
+            <div class="grant-card">
+                <div class="grant-card-header">
+                    <div class="grant-card-info"><div class="grant-card-icon">☀️</div><div><div class="grant-card-title">Community Building Partnership 2026</div><div class="grant-card-subtitle">State Government · Infrastructure</div></div></div>
+                    <div class="grant-card-meta">
+                        <div class="grant-meta-item"><div class="grant-meta-label">Amount</div><div class="grant-meta-value">Up to $50,000</div></div>
+                        <div class="grant-meta-item"><div class="grant-meta-label">Open Date</div><div class="grant-meta-value">Jan 15, 2026</div></div>
+                        <div class="grant-meta-item"><div class="grant-meta-label">Close Date</div><div class="grant-meta-value">Feb 21, 2026</div></div>
+                        <div class="grant-meta-item"><div class="grant-meta-label">Interest</div><div class="grant-meta-value"><span class="interest-badge interest-interested">Interested</span></div></div>
+                        <div class="grant-meta-item"><div class="grant-meta-label">Status</div><div class="grant-meta-value"><span class="status-badge status-open-match">Open Match</span></div></div>
+                    </div>
+                </div>
+                <div class="interest-row"><div class="interest-info"><span>📌</span><span>Club expressed interest · Eligibility confirmed</span></div><div class="interest-actions"><span style="font-size:0.8125rem;color:var(--color-text-secondary);font-style:italic;">⏳ Waiting for Grant Professional to review eligibility</span></div></div>
+            </div>
+
+            <!-- Proceeding Grant 1 - with Pending Items -->
+            <div class="grant-card">
+                <div class="grant-card-header">
+                    <div class="grant-card-info"><div class="grant-card-icon">🏈</div><div><div class="grant-card-title">Telstra Footy Grants 2026</div><div class="grant-card-subtitle">AFL Community Grants · Corporate</div></div></div>
+                    <div class="grant-card-meta">
+                        <div class="grant-meta-item"><div class="grant-meta-label">Amount</div><div class="grant-meta-value">Up to $20,000</div></div>
+                        <div class="grant-meta-item"><div class="grant-meta-label">Open Date</div><div class="grant-meta-value">Nov 1, 2025</div></div>
+                        <div class="grant-meta-item"><div class="grant-meta-label">Close Date</div><div class="grant-meta-value urgent">Feb 1, 2026 (10 days)</div></div>
+                        <div class="grant-meta-item"><div class="grant-meta-label">Interest</div><div class="grant-meta-value"><span class="interest-badge interest-interested">Interested</span></div></div>
+                        <div class="grant-meta-item"><div class="grant-meta-label">Status</div><div class="grant-meta-value"><span class="status-badge status-proceeding">Proceeding</span></div></div>
+                    </div>
+                </div>
+                <div class="pending-table-container">
+                    <div class="pending-table-header">
+                        <div class="pending-table-title">⚠️ Pending Information Required <span class="pending-count-badge">3 items</span></div>
+                        <div style="display:flex;gap:0.5rem"><button class="btn btn-sm">+ Add Item</button><button class="btn btn-sm btn-success">✉️ Notify Club</button><button class="btn btn-sm btn-warning">👤 Notify Account Executive</button></div>
+                    </div>
+                    <table class="pending-table">
+                        <thead><tr><th>Item</th><th>Type</th><th>Status</th><th>Notes</th><th>Requested</th><th>Actions</th></tr></thead>
+                        <tbody>
+                            <tr><td><div class="item-name">Upload defibrillator quote</div><div class="item-description">Quote from approved supplier</div></td><td><span class="type-badge type-file">📎 File Upload</span></td><td><span class="status-indicator status-pending">Pending</span></td><td><span class="notes-text">Must be dated within 30 days</span></td><td>Jan 18, 2026<br><small style="color:var(--color-text-muted)">by Sarah Williams</small></td><td class="actions-cell"><button class="icon-btn">✏️</button><button class="icon-btn">🗑️</button></td></tr>
+                            <tr><td><div class="item-name">Confirm portable seating qty</div><div class="item-description">How many seats needed?</div></td><td><span class="type-badge type-confirm">✓ Confirmation</span></td><td><span class="status-indicator status-pending">Pending</span></td><td><span class="notes-text">Exact number for budget</span></td><td>Jan 17, 2026<br><small style="color:var(--color-text-muted)">by Sarah Williams</small></td><td class="actions-cell"><button class="icon-btn">✏️</button><button class="icon-btn">🗑️</button></td></tr>
+                            <tr><td><div class="item-name">Upload shade structure quote</div><div class="item-description">Quote for permanent structures</div></td><td><span class="type-badge type-file">📎 File Upload</span></td><td><span class="status-indicator status-received">Received</span></td><td><span class="notes-text">—</span></td><td>Jan 15, 2026<br><small style="color:var(--color-text-muted)">by Sarah Williams</small></td><td class="actions-cell"><button class="icon-btn">👁️</button></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Proceeding Grant 2 - with Pending Items -->
+            <div class="grant-card">
+                <div class="grant-card-header">
+                    <div class="grant-card-info"><div class="grant-card-icon">🏛️</div><div><div class="grant-card-title">Stronger Communities Programme R10</div><div class="grant-card-subtitle">Federal Government · Infrastructure</div></div></div>
+                    <div class="grant-card-meta">
+                        <div class="grant-meta-item"><div class="grant-meta-label">Amount</div><div class="grant-meta-value">Up to $20,000</div></div>
+                        <div class="grant-meta-item"><div class="grant-meta-label">Open Date</div><div class="grant-meta-value">Dec 1, 2025</div></div>
+                        <div class="grant-meta-item"><div class="grant-meta-label">Close Date</div><div class="grant-meta-value urgent">Feb 14, 2026</div></div>
+                        <div class="grant-meta-item"><div class="grant-meta-label">Interest</div><div class="grant-meta-value"><span class="interest-badge interest-need-info">Need More Info</span></div></div>
+                        <div class="grant-meta-item"><div class="grant-meta-label">Status</div><div class="grant-meta-value"><span class="status-badge status-proceeding">Proceeding</span></div></div>
+                    </div>
+                </div>
+                <div class="pending-table-container">
+                    <div class="pending-table-header">
+                        <div class="pending-table-title">⚠️ Pending Information Required <span class="pending-count-badge">2 items</span></div>
+                        <div style="display:flex;gap:0.5rem"><button class="btn btn-sm">+ Add Item</button><button class="btn btn-sm btn-success">✉️ Notify Club</button><button class="btn btn-sm btn-warning">👤 Notify Account Executive</button></div>
+                    </div>
+                    <table class="pending-table">
+                        <thead><tr><th>Item</th><th>Type</th><th>Status</th><th>Notes</th><th>Requested</th><th>Actions</th></tr></thead>
+                        <tbody>
+                            <tr><td><div class="item-name">Council letter of support</div><div class="item-description">Letter from City of Ryde</div></td><td><span class="type-badge type-file">📎 File Upload</span></td><td><span class="status-indicator status-pending">Pending</span></td><td><span class="notes-text">Contact council grants team</span></td><td>Jan 12, 2026</td><td class="actions-cell"><button class="icon-btn">✏️</button><button class="icon-btn">🗑️</button></td></tr>
+                            <tr><td><div class="item-name">Project timeline confirmation</div><div class="item-description">Expected completion date</div></td><td><span class="type-badge type-text">✍️ Short Text</span></td><td><span class="status-indicator status-pending">Pending</span></td><td><span class="notes-text">—</span></td><td>Jan 12, 2026</td><td class="actions-cell"><button class="icon-btn">✏️</button><button class="icon-btn">🗑️</button></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Lodged Grant -->
+            <div class="grant-card">
+                <div class="grant-card-header">
+                    <div class="grant-card-info"><div class="grant-card-icon">❤️</div><div><div class="grant-card-title">Local Sport Defibrillator Grant</div><div class="grant-card-subtitle">State Government · Equipment</div></div></div>
+                    <div class="grant-card-meta">
+                        <div class="grant-meta-item"><div class="grant-meta-label">Amount</div><div class="grant-meta-value">$2,000</div></div>
+                        <div class="grant-meta-item"><div class="grant-meta-label">Open Date</div><div class="grant-meta-value">Oct 15, 2025</div></div>
+                        <div class="grant-meta-item"><div class="grant-meta-label">Close Date</div><div class="grant-meta-value">Mar 1, 2026</div></div>
+                        <div class="grant-meta-item"><div class="grant-meta-label">Interest</div><div class="grant-meta-value"><span class="interest-badge interest-interested">Interested</span></div></div>
+                        <div class="grant-meta-item"><div class="grant-meta-label">Status</div><div class="grant-meta-value"><span class="status-badge status-lodged">Lodged</span></div></div>
+                    </div>
+                </div>
+                <div class="interest-row"><div class="interest-info"><span style="color:#059669">✓</span><span>Application submitted Jan 5, 2026 · Outcome expected Mar 15, 2026</span></div><div class="interest-actions"><button class="btn btn-sm">View Application</button></div></div>
+            </div>
+
+            <!-- Won Grant - with Success Fee Invoice Status -->
+            <div class="grant-card">
+                <div class="grant-card-header">
+                    <div class="grant-card-info"><div class="grant-card-icon">🏆</div><div><div class="grant-card-title">Sports Equipment Grant 2025</div><div class="grant-card-subtitle">State Government · Equipment</div></div></div>
+                    <div class="grant-card-meta">
+                        <div class="grant-meta-item"><div class="grant-meta-label">Amount Won</div><div class="grant-meta-value" style="color:#059669">$8,500</div></div>
+                        <div class="grant-meta-item"><div class="grant-meta-label">Open Date</div><div class="grant-meta-value">Jun 1, 2025</div></div>
+                        <div class="grant-meta-item"><div class="grant-meta-label">Close Date</div><div class="grant-meta-value">Aug 15, 2025</div></div>
+                        <div class="grant-meta-item"><div class="grant-meta-label">Interest</div><div class="grant-meta-value"><span class="interest-badge interest-interested">Interested</span></div></div>
+                        <div class="grant-meta-item"><div class="grant-meta-label">Status</div><div class="grant-meta-value"><span class="status-badge status-won">Won</span></div></div>
+                    </div>
+                </div>
+                <div class="won-details">
+                    <div class="won-grid">
+                        <div class="won-item"><div class="won-label">Grant Amount</div><div class="won-value">$8,500</div></div>
+                        <div class="won-item"><div class="won-label">Outcome Date</div><div class="won-value">Oct 20, 2025</div></div>
+                        <div class="won-item"><div class="won-label">Success Fee (10%)</div><div class="won-value">$850</div></div>
+                        <div class="won-item"><div class="won-label">Invoice Status</div><div class="won-value"><span class="invoice-status invoice-paid">✓ Paid</span></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lost Grant -->
+            <div class="grant-card">
+                <div class="grant-card-header">
+                    <div class="grant-card-info"><div class="grant-card-icon" style="background:#FEE2E2">📋</div><div><div class="grant-card-title">Community Infrastructure Grant 2025</div><div class="grant-card-subtitle">Local Council · Infrastructure</div></div></div>
+                    <div class="grant-card-meta">
+                        <div class="grant-meta-item"><div class="grant-meta-label">Amount Requested</div><div class="grant-meta-value">$15,000</div></div>
+                        <div class="grant-meta-item"><div class="grant-meta-label">Open Date</div><div class="grant-meta-value">May 1, 2025</div></div>
+                        <div class="grant-meta-item"><div class="grant-meta-label">Close Date</div><div class="grant-meta-value">Jul 30, 2025</div></div>
+                        <div class="grant-meta-item"><div class="grant-meta-label">Interest</div><div class="grant-meta-value"><span class="interest-badge interest-not-interested">Not Interested</span></div></div>
+                        <div class="grant-meta-item"><div class="grant-meta-label">Status</div><div class="grant-meta-value"><span class="status-badge status-lost">Lost</span></div></div>
+                    </div>
+                </div>
+                <div class="interest-row" style="background:#FEF2F2"><div class="interest-info"><span style="color:#DC2626">✗</span><span>Application unsuccessful · Outcome received Sep 15, 2025</span></div><div class="interest-actions"><button class="btn btn-sm">View Feedback</button></div></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('tab-' + tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Dashboard - Grant Professionals Portal</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --color-primary: #0F172A; --color-accent: #3B82F6; --color-success: #059669; --color-warning: #D97706; --color-danger: #DC2626; --color-border: #E2E8F0; --color-text: #0F172A; --color-text-secondary: #64748B; --color-text-muted: #94A3B8; --color-bg: #FFFFFF; --color-bg-secondary: #F8FAFC; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif; background: var(--color-bg-secondary); color: var(--color-text); line-height: 1.5; }
+        .header { background: var(--color-bg); border-bottom: 1px solid var(--color-border); }
+        .header-content { max-width: 1400px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 0.875rem; font-weight: 600; display: flex; align-items: center; gap: 0.75rem; }
+        .logo-icon { width: 32px; height: 32px; background: var(--color-primary); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.875rem; }
+        .user-info { font-size: 0.875rem; color: var(--color-text-secondary); }
+        .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+        .page-header { margin-bottom: 2rem; }
+        .page-header h1 { font-size: 1.5rem; font-weight: 600; }
+        .page-header p { color: var(--color-text-secondary); font-size: 0.875rem; margin-top: 0.25rem; }
+        .main-tabs { display: flex; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 12px 12px 0 0; border-bottom: none; padding: 0 1rem; }
+        .main-tab { padding: 1rem 1.5rem; font-size: 0.875rem; font-weight: 500; color: var(--color-text-secondary); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; background: none; border-top: none; border-left: none; border-right: none; }
+        .main-tab:hover { color: var(--color-text); }
+        .main-tab.active { color: var(--color-accent); border-bottom-color: var(--color-accent); }
+        .tab-count { background: var(--color-bg-secondary); padding: 0.125rem 0.5rem; border-radius: 10px; font-size: 0.75rem; margin-left: 0.5rem; }
+        .main-tab.active .tab-count { background: #DBEAFE; color: #1E40AF; }
+        .tab-content { display: none; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 0 0 12px 12px; }
+        .tab-content.active { display: block; }
+        .filters-bar { display: flex; gap: 0.75rem; padding: 1rem 1.5rem; border-bottom: 1px solid var(--color-border); flex-wrap: wrap; align-items: center; }
+        .filter-select { padding: 0.5rem 0.75rem; border: 1px solid var(--color-border); border-radius: 6px; font-size: 0.8125rem; background: var(--color-bg); min-width: 140px; }
+        .search-input { padding: 0.5rem 0.75rem 0.5rem 2rem; border: 1px solid var(--color-border); border-radius: 6px; font-size: 0.8125rem; width: 220px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394A3B8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'/%3E%3C/svg%3E") no-repeat 0.5rem center/1rem; }
+        .clear-filters { font-size: 0.8125rem; color: var(--color-accent); cursor: pointer; background: none; border: none; }
+        .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; padding: 1rem 1.5rem; background: var(--color-bg-secondary); border-bottom: 1px solid var(--color-border); }
+        .stat-card { background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 1rem; }
+        .stat-label { font-size: 0.75rem; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
+        .stat-value { font-size: 1.5rem; font-weight: 600; margin-top: 0.25rem; }
+        table { width: 100%; border-collapse: collapse; }
+        thead { background: var(--color-bg-secondary); }
+        th { padding: 0.75rem 1rem; text-align: left; font-weight: 500; color: var(--color-text-secondary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--color-border); }
+        th.sortable { cursor: pointer; }
+        th.sortable:hover { color: var(--color-text); }
+        tbody tr { border-bottom: 1px solid var(--color-border); cursor: pointer; }
+        tbody tr:hover { background: var(--color-bg-secondary); }
+        td { padding: 0.875rem 1rem; font-size: 0.875rem; }
+        .club-cell { display: flex; align-items: center; gap: 0.75rem; }
+        .club-avatar { width: 32px; height: 32px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; }
+        .club-name { font-weight: 500; }
+        .club-meta { font-size: 0.75rem; color: var(--color-text-secondary); }
+        .subscription-badge { display: inline-flex; padding: 0.125rem 0.5rem; font-size: 0.6875rem; font-weight: 600; border-radius: 4px; text-transform: uppercase; }
+        .badge-starter { background: #F1F5F9; color: #475569; }
+        .badge-growth { background: #DBEAFE; color: #1E40AF; }
+        .badge-ready { background: #EDE9FE; color: #6D28D9; }
+        .badge-enterprise { background: #FEF3C7; color: #92400E; }
+        .manager-cell { display: flex; align-items: center; gap: 0.5rem; }
+        .manager-avatar { width: 24px; height: 24px; background: var(--color-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.625rem; font-weight: 600; }
+        .status-badge { display: inline-flex; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 500; }
+        .status-active { background: #D1FAE5; color: #065F46; }
+        .status-pending { background: #FEF3C7; color: #92400E; }
+        .status-inactive { background: #F1F5F9; color: #64748B; }
+        .pending-badge { background: #FEE2E2; color: #DC2626; padding: 0.125rem 0.5rem; border-radius: 10px; font-size: 0.75rem; font-weight: 600; }
+        .btn { padding: 0.5rem 1rem; border: 1px solid var(--color-border); border-radius: 6px; font-size: 0.8125rem; font-weight: 500; cursor: pointer; background: var(--color-bg); color: var(--color-text); display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; }
+        .btn:hover { background: var(--color-bg-secondary); }
+        .btn-primary { background: var(--color-accent); color: white; border-color: var(--color-accent); }
+        .btn-sm { padding: 0.375rem 0.75rem; font-size: 0.75rem; }
+        .pagination { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-top: 1px solid var(--color-border); }
+        .pagination-info { font-size: 0.8125rem; color: var(--color-text-secondary); }
+        .pagination-controls { display: flex; gap: 0.5rem; }
+        .page-btn { padding: 0.375rem 0.75rem; border: 1px solid var(--color-border); border-radius: 4px; font-size: 0.8125rem; background: var(--color-bg); cursor: pointer; }
+        .page-btn.active { background: var(--color-accent); color: white; border-color: var(--color-accent); }
+        .grant-link-cell { display: flex; align-items: center; gap: 0.5rem; }
+        .grant-link { color: var(--color-accent); text-decoration: none; font-size: 0.8125rem; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .grant-link:hover { text-decoration: underline; }
+        .edit-link-btn { padding: 0.25rem; border: none; background: none; cursor: pointer; color: var(--color-text-muted); font-size: 0.75rem; }
+        .edit-link-btn:hover { color: var(--color-accent); }
+        .invoice-status { display: inline-flex; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 500; }
+        .invoice-pending { background: #FEF3C7; color: #92400E; }
+        .invoice-sent { background: #DBEAFE; color: #1E40AF; }
+        .invoice-paid { background: #D1FAE5; color: #065F46; }
+        .invoice-overdue { background: #FEE2E2; color: #DC2626; }
+        .amount-cell { font-weight: 600; }
+        .amount-success { color: var(--color-success); }
+        @media (max-width: 1024px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 768px) { .container { padding: 1rem; } .stats-row { grid-template-columns: 1fr; } .filters-bar { flex-direction: column; align-items: stretch; } .filter-select, .search-input { width: 100%; } }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo"><div class="logo-icon">GP</div>Grant Professionals Portal</div>
+            <div class="user-info">Sarah Williams · Grant Writer</div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="page-header">
+            <h1>Staff Dashboard</h1>
+            <p>View and manage all clubs, grant opportunities, and invoices</p>
+        </div>
+        <div class="main-tabs">
+            <button class="main-tab active" onclick="showTab('clubs')">Clubs <span class="tab-count">47</span></button>
+            <button class="main-tab" onclick="showTab('grants')">Grants <span class="tab-count">12</span></button>
+            <button class="main-tab" onclick="showTab('invoices')">Invoices <span class="tab-count">18</span></button>
+        </div>
+
+        <!-- CLUBS TAB -->
+        <div class="tab-content active" id="tab-clubs">
+            <div class="filters-bar">
+                <select class="filter-select"><option value="">Account Executive ▼</option><option>John Smith</option><option>Emma Wilson</option><option>David Chen</option></select>
+                <select class="filter-select"><option value="">Subscription Plan ▼</option><option>Starter</option><option>Growth</option><option>Grant Ready</option><option>Enterprise</option></select>
+                <select class="filter-select"><option value="">Status ▼</option><option>Active</option><option>Pending Info</option><option>Inactive</option></select>
+                <select class="filter-select"><option value="">State ▼</option><option>NSW</option><option>VIC</option><option>QLD</option><option>SA</option><option>WA</option><option>TAS</option><option>NT</option><option>ACT</option></select>
+                <select class="filter-select"><option value="">LGA ▼</option><option>City of Ryde</option><option>Hornsby Shire</option><option>Parramatta</option><option>Blacktown</option></select>
+                <select class="filter-select"><option value="">Sport ▼</option><option>AFL</option><option>Netball</option><option>Cricket</option><option>Soccer</option><option>Rugby</option></select>
+                <input type="text" class="search-input" placeholder="Search clubs...">
+                <button class="clear-filters">Clear Filters</button>
+            </div>
+            <div class="stats-row">
+                <div class="stat-card"><div class="stat-label">Total Clubs</div><div class="stat-value">47</div></div>
+                <div class="stat-card"><div class="stat-label">Active Clubs</div><div class="stat-value">38</div></div>
+                <div class="stat-card"><div class="stat-label">Pending Items</div><div class="stat-value" style="color:var(--color-warning)">12</div></div>
+                <div class="stat-card"><div class="stat-label">Active Grants</div><div class="stat-value">23</div></div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="sortable">Club ↕</th>
+                        <th>Plan</th>
+                        <th class="sortable">Account Executive ↕</th>
+                        <th>State</th>
+                        <th>LGA</th>
+                        <th>Status</th>
+                        <th class="sortable">Active Grants ↕</th>
+                        <th class="sortable">Last Login ↕</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr onclick="viewClub('ryde')">
+                        <td><div class="club-cell"><div class="club-avatar">🏉</div><div><div class="club-name">Ryde Saints JFC</div><div class="club-meta">AFL</div></div></div></td>
+                        <td><span class="subscription-badge badge-ready">Grant Ready</span></td>
+                        <td><div class="manager-cell"><div class="manager-avatar">JS</div>John Smith</div></td>
+                        <td>NSW</td>
+                        <td>City of Ryde</td>
+                        <td><span class="pending-badge">3 Pending</span></td>
+                        <td>3</td>
+                        <td style="color:var(--color-success)">2 hours ago</td>
+                        <td><button class="btn btn-sm" onclick="event.stopPropagation();viewClub('ryde')">View</button></td>
+                    </tr>
+                    <tr onclick="viewClub('hornsby')">
+                        <td><div class="club-cell"><div class="club-avatar">🏐</div><div><div class="club-name">Hornsby Netball Association</div><div class="club-meta">Netball</div></div></div></td>
+                        <td><span class="subscription-badge badge-enterprise">Enterprise</span></td>
+                        <td><div class="manager-cell"><div class="manager-avatar">EW</div>Emma Wilson</div></td>
+                        <td>NSW</td>
+                        <td>Hornsby Shire</td>
+                        <td><span class="status-badge status-active">Active</span></td>
+                        <td>5</td>
+                        <td>Yesterday</td>
+                        
+                    </tr>
+                    <tr onclick="viewClub('parramatta')">
+                        <td><div class="club-cell"><div class="club-avatar">🏏</div><div><div class="club-name">Parramatta Cricket Club</div><div class="club-meta">Cricket</div></div></div></td>
+                        <td><span class="subscription-badge badge-growth">Growth</span></td>
+                        <td><div class="manager-cell"><div class="manager-avatar">DC</div>David Chen</div></td>
+                        <td>NSW</td>
+                        <td>Parramatta</td>
+                        <td><span class="status-badge status-active">Active</span></td>
+                        <td>2</td>
+                        <td>3 days ago</td>
+                        
+                    </tr>
+                    <tr onclick="viewClub('manly')">
+                        <td><div class="club-cell"><div class="club-avatar">🏄</div><div><div class="club-name">Manly Surf Life Saving</div><div class="club-meta">Surf Life Saving</div></div></div></td>
+                        <td><span class="subscription-badge badge-ready">Grant Ready</span></td>
+                        <td><div class="manager-cell"><div class="manager-avatar">JS</div>John Smith</div></td>
+                        <td>NSW</td>
+                        <td>Northern Beaches</td>
+                        <td><span class="pending-badge">1 Pending</span></td>
+                        <td>4</td>
+                        <td style="color:var(--color-success)">5 hours ago</td>
+                        
+                    </tr>
+                    <tr onclick="viewClub('blacktown')">
+                        <td><div class="club-cell"><div class="club-avatar">⚽</div><div><div class="club-name">Blacktown Soccer FC</div><div class="club-meta">Soccer</div></div></div></td>
+                        <td><span class="subscription-badge badge-starter">Starter</span></td>
+                        <td><div class="manager-cell"><div class="manager-avatar">SJ</div>Sarah Jones</div></td>
+                        <td>NSW</td>
+                        <td>Blacktown</td>
+                        <td><span class="status-badge status-inactive">Inactive</span></td>
+                        <td>0</td>
+                        <td style="color:var(--color-text-muted)">2 weeks ago</td>
+                        
+                    </tr>
+                    <tr onclick="viewClub('north-sydney')">
+                        <td><div class="club-cell"><div class="club-avatar">🏉</div><div><div class="club-name">North Sydney Rugby Club</div><div class="club-meta">Rugby</div></div></div></td>
+                        <td><span class="subscription-badge badge-growth">Growth</span></td>
+                        <td><div class="manager-cell"><div class="manager-avatar">EW</div>Emma Wilson</div></td>
+                        <td>NSW</td>
+                        <td>North Sydney</td>
+                        <td><span class="status-badge status-active">Active</span></td>
+                        <td>2</td>
+                        <td>1 day ago</td>
+                        
+                    </tr>
+                    <tr onclick="viewClub('penrith')">
+                        <td><div class="club-cell"><div class="club-avatar">🏀</div><div><div class="club-name">Penrith Basketball Assoc</div><div class="club-meta">Basketball</div></div></div></td>
+                        <td><span class="subscription-badge badge-enterprise">Enterprise</span></td>
+                        <td><div class="manager-cell"><div class="manager-avatar">DC</div>David Chen</div></td>
+                        <td>NSW</td>
+                        <td>Penrith</td>
+                        <td><span class="pending-badge">2 Pending</span></td>
+                        <td>6</td>
+                        <td style="color:var(--color-success)">4 hours ago</td>
+                        
+                    </tr>
+                </tbody>
+            </table>
+            <div class="pagination">
+                <div class="pagination-info">Showing 1-7 of 47 clubs</div>
+                <div class="pagination-controls">
+                    <button class="page-btn">‹</button>
+                    <button class="page-btn active">1</button>
+                    <button class="page-btn">2</button>
+                    <button class="page-btn">3</button>
+                    <button class="page-btn">...</button>
+                    <button class="page-btn">7</button>
+                    <button class="page-btn">›</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- GRANTS TAB -->
+        <div class="tab-content" id="tab-grants">
+            <div class="filters-bar">
+                <select class="filter-select"><option value="">Status ▼</option><option>Open</option><option>Closing Soon</option><option>Closed</option></select>
+                <select class="filter-select"><option value="">Grant Program ▼</option><option>Federal</option><option>State</option><option>Local</option><option>Corporate</option></select>
+                <select class="filter-select"><option value="">Amount Range ▼</option><option>Up to $5K</option><option>$5K-$20K</option><option>$20K-$50K</option><option>$50K+</option></select>
+                <input type="text" class="search-input" placeholder="Search grants...">
+                <button class="clear-filters">Clear Filters</button>
+            </div>
+            <div class="stats-row">
+                <div class="stat-card"><div class="stat-label">Total Grants</div><div class="stat-value">12</div></div>
+                <div class="stat-card"><div class="stat-label">Open Grants</div><div class="stat-value">8</div></div>
+                <div class="stat-card"><div class="stat-label">Closing Soon</div><div class="stat-value" style="color:var(--color-danger)">3</div></div>
+                <div class="stat-card"><div class="stat-label">Clubs with Interest</div><div class="stat-value">23</div></div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="sortable">Grant ↕</th>
+                        <th>Amount</th>
+                        <th>Open Date</th>
+                        <th class="sortable">Close Date ↕</th>
+                        <th>Status</th>
+                        <th class="sortable">Clubs ↕</th>
+                        <th>Grant Link</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr onclick="viewGrant('telstra')">
+                        <td><div class="club-name">Telstra Footy Grants 2026</div><div class="club-meta">AFL Community Grants · Corporate</div></td>
+                        <td>Up to $20,000</td>
+                        <td>Nov 1, 2025</td>
+                        <td style="color:var(--color-danger)">Feb 1, 2026 (10 days)</td>
+                        <td><span class="status-badge" style="background:#FEF3C7;color:#92400E">Closing Soon</span></td>
+                        <td><span class="pending-badge" style="background:#DBEAFE;color:#1E40AF">8 clubs</span></td>
+                        <td><div class="grant-link-cell"><a href="https://www.telstra.com.au/footygrants" target="_blank" class="grant-link" onclick="event.stopPropagation()">telstra.com.au/footygrants ↗</a><button class="edit-link-btn" onclick="event.stopPropagation();editLink(this)" title="Edit link">✏️</button></div></td>
+                        <td><button class="btn btn-sm btn-primary" onclick="event.stopPropagation()">View Clubs</button></td>
+                    </tr>
+                    <tr onclick="viewGrant('stronger')">
+                        <td><div class="club-name">Stronger Communities Programme R10</div><div class="club-meta">Federal Government</div></td>
+                        <td>Up to $20,000</td>
+                        <td>Dec 1, 2025</td>
+                        <td style="color:var(--color-danger)">Feb 14, 2026 (23 days)</td>
+                        <td><span class="status-badge" style="background:#FEF3C7;color:#92400E">Closing Soon</span></td>
+                        <td><span class="pending-badge" style="background:#DBEAFE;color:#1E40AF">5 clubs</span></td>
+                        <td><div class="grant-link-cell"><a href="https://business.gov.au/grants-and-programs/stronger-communities-programme" target="_blank" class="grant-link" onclick="event.stopPropagation()">business.gov.au ↗</a><button class="edit-link-btn" onclick="event.stopPropagation();editLink(this)" title="Edit link">✏️</button></div></td>
+                        <td><button class="btn btn-sm btn-primary" onclick="event.stopPropagation()">View Clubs</button></td>
+                    </tr>
+                    <tr onclick="viewGrant('cbp')">
+                        <td><div class="club-name">Community Building Partnership 2026</div><div class="club-meta">State Government · NSW</div></td>
+                        <td>Up to $50,000</td>
+                        <td>Jan 15, 2026</td>
+                        <td>Feb 21, 2026</td>
+                        <td><span class="status-badge status-active">Open</span></td>
+                        <td><span class="pending-badge" style="background:#DBEAFE;color:#1E40AF">12 clubs</span></td>
+                        <td><div class="grant-link-cell"><a href="https://www.nsw.gov.au/grants-and-funding/community-building-partnership" target="_blank" class="grant-link" onclick="event.stopPropagation()">nsw.gov.au ↗</a><button class="edit-link-btn" onclick="event.stopPropagation();editLink(this)" title="Edit link">✏️</button></div></td>
+                        <td><button class="btn btn-sm btn-primary" onclick="event.stopPropagation()">View Clubs</button></td>
+                    </tr>
+                    <tr onclick="viewGrant('defib')">
+                        <td><div class="club-name">Local Sport Defibrillator Grant</div><div class="club-meta">State Government</div></td>
+                        <td>$2,000</td>
+                        <td>Oct 15, 2025</td>
+                        <td>Mar 1, 2026</td>
+                        <td><span class="status-badge status-active">Open</span></td>
+                        <td><span class="pending-badge" style="background:#DBEAFE;color:#1E40AF">15 clubs</span></td>
+                        <td><div class="grant-link-cell"><a href="https://www.sport.nsw.gov.au/grants/defibrillator" target="_blank" class="grant-link" onclick="event.stopPropagation()">sport.nsw.gov.au ↗</a><button class="edit-link-btn" onclick="event.stopPropagation();editLink(this)" title="Edit link">✏️</button></div></td>
+                        <td><button class="btn btn-sm btn-primary" onclick="event.stopPropagation()">View Clubs</button></td>
+                    </tr>
+                    <tr onclick="viewGrant('victoria')">
+                        <td><div class="club-name">Sports & Recreation Victoria</div><div class="club-meta">State Government · VIC</div></td>
+                        <td>Up to $5,000</td>
+                        <td>Feb 1, 2026</td>
+                        <td>Mar 18, 2026</td>
+                        <td><span class="status-badge status-active">Open</span></td>
+                        <td><span class="pending-badge" style="background:#DBEAFE;color:#1E40AF">3 clubs</span></td>
+                        <td><div class="grant-link-cell"><a href="https://sport.vic.gov.au/grants" target="_blank" class="grant-link" onclick="event.stopPropagation()">sport.vic.gov.au ↗</a><button class="edit-link-btn" onclick="event.stopPropagation();editLink(this)" title="Edit link">✏️</button></div></td>
+                        <td><button class="btn btn-sm btn-primary" onclick="event.stopPropagation()">View Clubs</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="pagination">
+                <div class="pagination-info">Showing 1-5 of 12 grants</div>
+                <div class="pagination-controls">
+                    <button class="page-btn">‹</button>
+                    <button class="page-btn active">1</button>
+                    <button class="page-btn">2</button>
+                    <button class="page-btn">3</button>
+                    <button class="page-btn">›</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- INVOICES TAB -->
+        <div class="tab-content" id="tab-invoices">
+            <div class="filters-bar">
+                <select class="filter-select"><option value="">Status ▼</option><option>Pending</option><option>Sent</option><option>Paid</option><option>Overdue</option></select>
+                <select class="filter-select"><option value="">Account Executive ▼</option><option>John Smith</option><option>Emma Wilson</option><option>David Chen</option></select>
+                <select class="filter-select"><option value="">Date Range ▼</option><option>This Month</option><option>Last Month</option><option>Last 3 Months</option><option>This Year</option></select>
+                <input type="text" class="search-input" placeholder="Search invoices...">
+                <button class="clear-filters">Clear Filters</button>
+            </div>
+            <div class="stats-row">
+                <div class="stat-card"><div class="stat-label">Total Invoices</div><div class="stat-value">18</div></div>
+                <div class="stat-card"><div class="stat-label">Pending</div><div class="stat-value" style="color:var(--color-warning)">4</div></div>
+                <div class="stat-card"><div class="stat-label">Overdue</div><div class="stat-value" style="color:var(--color-danger)">2</div></div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="sortable">Invoice # ↕</th>
+                        <th>Club</th>
+                        <th>Grant</th>
+                        <th class="sortable">Amount Won ↕</th>
+                        <th class="sortable">Success Fee ↕</th>
+                        <th class="sortable">Invoice Date ↕</th>
+                        <th class="sortable">Due Date ↕</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span style="font-weight:500">INV-2026-001</span></td>
+                        <td><div class="club-name">Ryde Saints JFC</div></td>
+                        <td><div class="club-meta">Sports Equipment Grant 2025</div></td>
+                        <td class="amount-cell amount-success">$8,500</td>
+                        <td class="amount-cell">$850</td>
+                        <td>Oct 25, 2025</td>
+                        <td>Nov 25, 2025</td>
+                        <td><span class="invoice-status invoice-paid">Paid</span></td>
+                        
+                    </tr>
+                    <tr>
+                        <td><span style="font-weight:500">INV-2026-002</span></td>
+                        <td><div class="club-name">Hornsby Netball Association</div></td>
+                        <td><div class="club-meta">Community Building Partnership 2025</div></td>
+                        <td class="amount-cell amount-success">$25,000</td>
+                        <td class="amount-cell">$2,500</td>
+                        <td>Nov 10, 2025</td>
+                        <td>Dec 10, 2025</td>
+                        <td><span class="invoice-status invoice-paid">Paid</span></td>
+                        
+                    </tr>
+                    <tr>
+                        <td><span style="font-weight:500">INV-2026-003</span></td>
+                        <td><div class="club-name">Parramatta Cricket Club</div></td>
+                        <td><div class="club-meta">Local Sport Defibrillator Grant</div></td>
+                        <td class="amount-cell amount-success">$2,000</td>
+                        <td class="amount-cell">$200</td>
+                        <td>Dec 1, 2025</td>
+                        <td>Jan 1, 2026</td>
+                        <td><span class="invoice-status invoice-paid">Paid</span></td>
+                        
+                    </tr>
+                    <tr>
+                        <td><span style="font-weight:500">INV-2026-004</span></td>
+                        <td><div class="club-name">Manly Surf Life Saving</div></td>
+                        <td><div class="club-meta">Stronger Communities Programme R9</div></td>
+                        <td class="amount-cell amount-success">$18,000</td>
+                        <td class="amount-cell">$1,800</td>
+                        <td>Dec 15, 2025</td>
+                        <td>Jan 15, 2026</td>
+                        <td><span class="invoice-status invoice-sent">Sent</span></td>
+                        
+                    </tr>
+                    <tr>
+                        <td><span style="font-weight:500">INV-2026-005</span></td>
+                        <td><div class="club-name">North Sydney Rugby Club</div></td>
+                        <td><div class="club-meta">Sports & Recreation Victoria</div></td>
+                        <td class="amount-cell amount-success">$5,000</td>
+                        <td class="amount-cell">$500</td>
+                        <td>Jan 5, 2026</td>
+                        <td>Feb 5, 2026</td>
+                        <td><span class="invoice-status invoice-sent">Sent</span></td>
+                        
+                    </tr>
+                    <tr>
+                        <td><span style="font-weight:500">INV-2026-006</span></td>
+                        <td><div class="club-name">Penrith Basketball Assoc</div></td>
+                        <td><div class="club-meta">Community Infrastructure Grant</div></td>
+                        <td class="amount-cell amount-success">$32,000</td>
+                        <td class="amount-cell">$3,200</td>
+                        <td>Jan 10, 2026</td>
+                        <td>Feb 10, 2026</td>
+                        <td><span class="invoice-status invoice-pending">Pending</span></td>
+                        
+                    </tr>
+                    <tr>
+                        <td><span style="font-weight:500">INV-2026-007</span></td>
+                        <td><div class="club-name">Blacktown Soccer FC</div></td>
+                        <td><div class="club-meta">Telstra Footy Grants 2025</div></td>
+                        <td class="amount-cell amount-success">$15,000</td>
+                        <td class="amount-cell">$1,500</td>
+                        <td>Jan 12, 2026</td>
+                        <td>Feb 12, 2026</td>
+                        <td><span class="invoice-status invoice-pending">Pending</span></td>
+                        
+                    </tr>
+                    <tr style="background:#FEF2F2">
+                        <td><span style="font-weight:500">INV-2025-089</span></td>
+                        <td><div class="club-name">Eastern Suburbs FC</div></td>
+                        <td><div class="club-meta">Active Kids Voucher Program</div></td>
+                        <td class="amount-cell amount-success">$4,000</td>
+                        <td class="amount-cell">$400</td>
+                        <td>Nov 1, 2025</td>
+                        <td style="color:var(--color-danger)">Dec 1, 2025</td>
+                        <td><span class="invoice-status invoice-overdue">Overdue</span></td>
+                        
+                    </tr>
+                    <tr style="background:#FEF2F2">
+                        <td><span style="font-weight:500">INV-2025-092</span></td>
+                        <td><div class="club-name">Canterbury Bulldogs JRL</div></td>
+                        <td><div class="club-meta">Local Sport Defibrillator Grant</div></td>
+                        <td class="amount-cell amount-success">$2,000</td>
+                        <td class="amount-cell">$200</td>
+                        <td>Nov 15, 2025</td>
+                        <td style="color:var(--color-danger)">Dec 15, 2025</td>
+                        <td><span class="invoice-status invoice-overdue">Overdue</span></td>
+                        
+                    </tr>
+                </tbody>
+            </table>
+            <div class="pagination">
+                <div class="pagination-info">Showing 1-9 of 18 invoices</div>
+                <div class="pagination-controls">
+                    <button class="page-btn">‹</button>
+                    <button class="page-btn active">1</button>
+                    <button class="page-btn">2</button>
+                    <button class="page-btn">›</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.main-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('tab-' + tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+        function viewClub(id) { window.location.href = 'club-profile-view.html'; }
+        function viewGrant(id) { window.location.href = 'grant-clubs-view.html'; }
+        function editLink(btn) {
+            const linkCell = btn.parentElement;
+            const linkEl = linkCell.querySelector('.grant-link');
+            const currentUrl = linkEl.href;
+            const newUrl = prompt('Edit grant link URL:', currentUrl);
+            if (newUrl && newUrl !== currentUrl) {
+                linkEl.href = newUrl;
+                const domain = newUrl.replace(/^https?:\/\//, '').split('/')[0];
+                linkEl.textContent = domain + ' ↗';
+            }
+        }
+    </script>
+</body>
+</html>

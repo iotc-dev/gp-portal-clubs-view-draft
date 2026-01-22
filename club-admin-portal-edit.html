@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Club Profile</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --color-primary: #0F172A;
+            --color-accent: #3B82F6;
+            --color-success: #059669;
+            --color-border: #E2E8F0;
+            --color-text: #0F172A;
+            --color-text-secondary: #64748B;
+            --color-text-muted: #94A3B8;
+            --color-bg: #FFFFFF;
+            --color-bg-secondary: #F8FAFC;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif; background: var(--color-bg-secondary); color: var(--color-text); line-height: 1.5; -webkit-font-smoothing: antialiased; }
+        .header { background: var(--color-bg); border-bottom: 1px solid var(--color-border); }
+        .header-content { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 0.875rem; font-weight: 600; color: var(--color-text); display: flex; align-items: center; gap: 0.75rem; }
+        .logo-icon { width: 32px; height: 32px; background: var(--color-primary); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.875rem; }
+        .header-actions { display: flex; gap: 0.75rem; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        .page-header { margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .page-header h1 { font-size: 1.5rem; font-weight: 600; color: var(--color-text); letter-spacing: -0.02em; }
+        .page-header p { color: var(--color-text-secondary); font-size: 0.875rem; margin-top: 0.25rem; }
+        .subscription-badge { display: inline-flex; align-items: center; padding: 0.25rem 0.75rem; background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%); color: white; font-size: 0.75rem; font-weight: 600; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.025em; }
+        .section-nav { background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 12px; padding: 1rem; margin-bottom: 2rem; display: flex; gap: 0.5rem; overflow-x: auto; }
+        .section-nav button { padding: 0.5rem 1rem; border: 1px solid var(--color-border); border-radius: 6px; background: var(--color-bg); color: var(--color-text-secondary); font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: all 0.15s ease; white-space: nowrap; }
+        .section-nav button:hover { background: var(--color-bg-secondary); }
+        .section-nav button.active { background: var(--color-accent); color: white; border-color: var(--color-accent); }
+        .form-section { display: none; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 12px; padding: 2rem; margin-bottom: 2rem; }
+        .form-section.active { display: block; }
+        .section-title { font-size: 1.125rem; font-weight: 600; color: var(--color-text); margin-bottom: 0.5rem; }
+        .section-description { color: var(--color-text-secondary); font-size: 0.875rem; margin-bottom: 2rem; }
+        .form-subsection { margin-bottom: 2.5rem; }
+        .subsection-title { font-size: 0.9375rem; font-weight: 600; color: var(--color-text); margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--color-border); }
+        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+        .form-group { margin-bottom: 1.25rem; }
+        .form-group.full-width { grid-column: 1 / -1; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--color-text); font-size: 0.875rem; }
+        .form-group label.required::after { content: '*'; color: #DC2626; margin-left: 0.25rem; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.625rem 0.75rem; border: 1px solid var(--color-border); border-radius: 8px; font-size: 0.875rem; font-family: inherit; transition: all 0.15s ease; background: var(--color-bg); }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--color-accent); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        .form-group textarea { resize: vertical; min-height: 100px; }
+        .form-hint { margin-top: 0.375rem; font-size: 0.8125rem; color: var(--color-text-muted); }
+        .checkbox-group, .radio-group { display: flex; flex-direction: column; gap: 0.75rem; }
+        .checkbox-item, .radio-item { display: flex; align-items: center; gap: 0.5rem; }
+        .checkbox-item input, .radio-item input { width: 18px; height: 18px; cursor: pointer; }
+        .checkbox-item label, .radio-item label { margin: 0; cursor: pointer; font-weight: 400; font-size: 0.875rem; }
+        .file-upload-area { border: 2px dashed var(--color-border); border-radius: 8px; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.2s ease; background: var(--color-bg-secondary); }
+        .file-upload-area:hover { border-color: var(--color-accent); background: #EFF6FF; }
+        .file-upload-text { color: var(--color-text); margin-bottom: 0.5rem; font-size: 0.875rem; }
+        .file-upload-hint { color: var(--color-text-muted); font-size: 0.8125rem; }
+        .uploaded-files { margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
+        .uploaded-file { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 6px; }
+        .uploaded-file-info { display: flex; align-items: center; gap: 0.75rem; }
+        .uploaded-file-name { font-weight: 500; font-size: 0.875rem; }
+        .uploaded-file-size { font-size: 0.8125rem; color: var(--color-text-secondary); }
+        .remove-file-btn { background: none; border: none; color: #DC2626; cursor: pointer; font-size: 0.875rem; }
+        .form-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border); }
+        .btn { padding: 0.625rem 1.25rem; border: 1px solid var(--color-border); border-radius: 8px; font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: all 0.15s ease; display: inline-flex; align-items: center; gap: 0.5rem; background: var(--color-bg); color: var(--color-text); text-decoration: none; }
+        .btn:hover { background: var(--color-bg-secondary); }
+        .btn-primary { background: var(--color-accent); color: white; border-color: var(--color-accent); }
+        .btn-primary:hover { background: #2563EB; }
+        .btn-success { background: var(--color-success); color: white; border-color: var(--color-success); }
+        .btn-success:hover { background: #047857; }
+        .unsaved-changes { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8125rem; color: var(--color-text-secondary); }
+        .unsaved-dot { width: 8px; height: 8px; background: #F59E0B; border-radius: 50%; }
+        @media (max-width: 768px) { .container { padding: 1rem; } .form-grid { grid-template-columns: 1fr; } .form-actions { flex-direction: column; gap: 1rem; } .btn { width: 100%; justify-content: center; } }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">GP</div>
+                Edit Club Profile
+            </div>
+            <div class="header-actions">
+                <div class="unsaved-changes">
+                    <div class="unsaved-dot"></div>
+                    <span>Unsaved changes</span>
+                </div>
+                <button class="btn" onclick="cancelEdit()">Cancel</button>
+                <button class="btn btn-success" onclick="saveChanges()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <div>
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.25rem;">
+                    <h1>Ryde Saints Junior Football Club</h1>
+                    <span class="subscription-badge">Grant Ready Plan</span>
+                </div>
+                <p>Edit your club profile information</p>
+            </div>
+        </div>
+
+        <div class="section-nav">
+            <button class="active" onclick="showSection('identity')">Identity & Legal</button>
+            <button onclick="showSection('location')">Address & Location</button>
+            <button onclick="showSection('contacts')">Contacts</button>
+            <button onclick="showSection('overview')">Organisation Overview</button>
+            <button onclick="showSection('wishlist')">Funding Wishlist</button>
+            <button onclick="showSection('financial')">Financial Data</button>
+            <button onclick="showSection('communications')">Communications</button>
+        </div>
+
+        <!-- Section 1: Identity & Legal Status -->
+        <div class="form-section active" id="section-identity">
+            <h2 class="section-title">Organisation Identity & Legal Status</h2>
+            <p class="section-description">Update your organisation's legal and registration details</p>
+
+            <div class="form-subsection">
+                <h3 class="subsection-title">Legal Information</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="required">Legal Entity Name / Club Name</label>
+                        <input type="text" value="Ryde Saints Junior Football Club Incorporated">
+                    </div>
+                    <div class="form-group">
+                        <label class="required">Shortened Name</label>
+                        <input type="text" value="Ryde Saints JFC">
+                    </div>
+                    <div class="form-group">
+                        <label class="required">ABN</label>
+                        <input type="text" value="12 345 678 901">
+                    </div>
+                    <div class="form-group">
+                        <label>GST Number</label>
+                        <input type="text" placeholder="If registered for GST">
+                    </div>
+                    <div class="form-group">
+                        <label>ACN / Incorporation Number</label>
+                        <input type="text" value="INC9876543">
+                    </div>
+                    <div class="form-group">
+                        <label>ACNC Registration Number</label>
+                        <input type="text" placeholder="If applicable">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-subsection">
+                <h3 class="subsection-title">Tax Status</h3>
+                <div class="form-group">
+                    <label class="required">DGR Endorsed</label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="dgr-yes" name="dgr" value="yes">
+                            <label for="dgr-yes">Yes</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="dgr-no" name="dgr" value="no" checked>
+                            <label for="dgr-no">No</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group full-width">
+                    <label>Tax Concessions</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="tax-income" checked>
+                            <label for="tax-income">Income tax exempt</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="tax-gst">
+                            <label for="tax-gst">GST concessions</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="tax-fbt">
+                            <label for="tax-fbt">FBT (Fringe Benefits Tax) concessions</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="tax-dgr">
+                            <label for="tax-dgr">DGR-related tax concessions</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-subsection">
+                <h3 class="subsection-title">Entity Type</h3>
+                <div class="form-group">
+                    <label class="required">Select Entity Type</label>
+                    <select>
+                        <option value="incorporated" selected>Incorporated not-for-profit organisation</option>
+                        <option value="company">Company limited by guarantee</option>
+                        <option value="cooperative">Non-distributing co-operative</option>
+                        <option value="indigenous">Australian Indigenous corporation</option>
+                        <option value="religious">Religious organisation</option>
+                        <option value="trustee">Incorporated trustee</option>
+                        <option value="local-gov">Local governing body</option>
+                        <option value="state-gov">State government agency</option>
+                        <option value="other">Other eligible organisation</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button class="btn" onclick="cancelEdit()">Cancel</button>
+                <button class="btn btn-primary" onclick="nextSection('location')">Next: Address & Location</button>
+            </div>
+        </div>
+
+        <!-- Section 2: Address & Location -->
+        <div class="form-section" id="section-location">
+            <h2 class="section-title">Address & Location Details</h2>
+            <p class="section-description">Update your organisation's physical and postal addresses</p>
+
+            <div class="form-subsection">
+                <h3 class="subsection-title">Organisation Physical Address</h3>
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label class="required">Street Address</label>
+                        <input type="text" value="123 Sports Avenue">
+                    </div>
+                    <div class="form-group">
+                        <label class="required">Suburb/Town</label>
+                        <input type="text" value="Ryde">
+                    </div>
+                    <div class="form-group">
+                        <label class="required">State</label>
+                        <select>
+                            <option value="NSW" selected>NSW</option>
+                            <option value="VIC">VIC</option>
+                            <option value="QLD">QLD</option>
+                            <option value="SA">SA</option>
+                            <option value="WA">WA</option>
+                            <option value="TAS">TAS</option>
+                            <option value="ACT">ACT</option>
+                            <option value="NT">NT</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">Postcode</label>
+                        <input type="text" value="2112">
+                    </div>
+                    <div class="form-group">
+                        <label class="required">Local Government Area</label>
+                        <input type="text" value="City of Ryde">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-subsection">
+                <h3 class="subsection-title">Postal Address</h3>
+                <div class="form-group">
+                    <label>Is the postal address the same as the organisation address?</label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="postal-same-yes" name="postal-same" value="yes" checked>
+                            <label for="postal-same-yes">Yes</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="postal-same-no" name="postal-same" value="no">
+                            <label for="postal-same-no">No, provide different postal address</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-subsection">
+                <h3 class="subsection-title">Primary Activity / Facility Address</h3>
+                <div class="form-group">
+                    <label>Is the activity address the same as the organisation address?</label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="activity-same-yes" name="activity-same" value="yes">
+                            <label for="activity-same-yes">Yes</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="activity-same-no" name="activity-same" value="no" checked>
+                            <label for="activity-same-no">No, provide different activity address</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-grid" style="margin-top: 1rem;">
+                    <div class="form-group full-width">
+                        <label>Facility Street Address</label>
+                        <input type="text" value="ELS Hall Park">
+                    </div>
+                    <div class="form-group">
+                        <label>Suburb/Town</label>
+                        <input type="text" value="Marsfield">
+                    </div>
+                    <div class="form-group">
+                        <label>State</label>
+                        <select>
+                            <option value="NSW" selected>NSW</option>
+                            <option value="VIC">VIC</option>
+                            <option value="QLD">QLD</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Postcode</label>
+                        <input type="text" value="2122">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button class="btn" onclick="prevSection('identity')">Previous</button>
+                <button class="btn btn-primary" onclick="nextSection('contacts')">Next: Contacts</button>
+            </div>
+        </div>
+
+        <!-- Section 3: Contacts -->
+        <div class="form-section" id="section-contacts">
+            <h2 class="section-title">Primary & Secondary Contacts</h2>
+            <p class="section-description">Update contact details for key personnel</p>
+
+            <div class="form-subsection">
+                <h3 class="subsection-title">Primary Contact</h3>
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label class="required">Full Name</label>
+                        <input type="text" value="Rebecca Pezzutti">
+                    </div>
+                    <div class="form-group">
+                        <label class="required">Role / Position at Club</label>
+                        <input type="text" value="Club Secretary">
+                    </div>
+                    <div class="form-group">
+                        <label class="required">Email</label>
+                        <input type="email" value="rebecca@rydesaints.com.au">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" placeholder="(02) 1234 5678">
+                    </div>
+                    <div class="form-group">
+                        <label class="required">Mobile</label>
+                        <input type="tel" value="0423 456 789">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="required">Authorised to submit grant applications?</label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="primary-auth-yes" name="primary-auth" value="yes" checked>
+                            <label for="primary-auth-yes">Yes</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="primary-auth-no" name="primary-auth" value="no">
+                            <label for="primary-auth-no">No</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-subsection">
+                <h3 class="subsection-title">Secondary Contact</h3>
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label>Full Name</label>
+                        <input type="text" value="Michael Chen">
+                    </div>
+                    <div class="form-group">
+                        <label>Role / Position</label>
+                        <input type="text" value="Club President">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" value="michael@rydesaints.com.au">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" placeholder="(02) 1234 5678">
+                    </div>
+                    <div class="form-group">
+                        <label>Mobile</label>
+                        <input type="tel" value="0434 567 890">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Authorised to receive correspondence and make decisions?</label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="secondary-auth-yes" name="secondary-auth" value="yes" checked>
+                            <label for="secondary-auth-yes">Yes</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="secondary-auth-no" name="secondary-auth" value="no">
+                            <label for="secondary-auth-no">No</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button class="btn" onclick="prevSection('location')">Previous</button>
+                <button class="btn btn-primary" onclick="nextSection('overview')">Next: Organisation Overview</button>
+            </div>
+        </div>
+
+        <!-- Section 4: Organisation Overview -->
+        <div class="form-section" id="section-overview">
+            <h2 class="section-title">Organisation Overview</h2>
+            <p class="section-description">Update information about your organisation</p>
+
+            <div class="form-subsection">
+                <h3 class="subsection-title">About Your Organisation</h3>
+                <div class="form-group">
+                    <label class="required">About the Organisation</label>
+                    <textarea rows="6">Ryde Saints Junior Football Club was established in 1985 and has been serving the Ryde community for nearly 40 years. We provide Australian Rules Football programs for children aged 5-17, with a focus on skill development, teamwork, and community engagement. Our club has grown from 30 members to over 240 registered players across multiple age groups.</textarea>
+                </div>
+                <div class="form-group">
+                    <label class="required">Purpose / Mission</label>
+                    <textarea rows="4">To provide a safe, inclusive, and supportive environment for young people to learn and play Australian Rules Football while developing life skills, building friendships, and fostering community connections.</textarea>
+                </div>
+                <div class="form-group">
+                    <label class="required">Key Issues / Priorities</label>
+                    <textarea rows="4">1. Upgrade aging clubroom facilities to meet modern safety standards.
+2. Purchase new training equipment including defibrillators.
+3. Expand girls' football program.
+4. Improve spectator amenities including shade structures and seating.</textarea>
+                </div>
+            </div>
+
+            <div class="form-subsection">
+                <h3 class="subsection-title">Sports & Activities</h3>
+                <div class="form-group">
+                    <label class="required">Sports or Activities Delivered</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="sport-football" checked>
+                            <label for="sport-football">Australian Rules Football</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="sport-netball">
+                            <label for="sport-netball">Netball</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="sport-cricket">
+                            <label for="sport-cricket">Cricket</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="sport-soccer">
+                            <label for="sport-soccer">Soccer</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Competition / League / Governing Body Affiliation</label>
+                    <input type="text" value="AFL NSW/ACT, Sydney Junior Football League">
+                </div>
+            </div>
+
+            <div class="form-subsection">
+                <h3 class="subsection-title">Club Files, Photos & Documents</h3>
+                <div class="form-group">
+                    <label>Upload Documents</label>
+                    <div class="file-upload-area">
+                        <div class="file-upload-text"><strong>Click to upload</strong> or drag and drop</div>
+                        <div class="file-upload-hint">PDF, DOC, XLS, JPG, PNG (Max 10MB each)</div>
+                    </div>
+                    <div class="uploaded-files">
+                        <div class="uploaded-file">
+                            <div class="uploaded-file-info">
+                                <span>📄</span>
+                                <span class="uploaded-file-name">Financial Report 2024-25.pdf</span>
+                                <span class="uploaded-file-size">2.4 MB</span>
+                            </div>
+                            <button class="remove-file-btn">Remove</button>
+                        </div>
+                        <div class="uploaded-file">
+                            <div class="uploaded-file-info">
+                                <span>📄</span>
+                                <span class="uploaded-file-name">Constitution.pdf</span>
+                                <span class="uploaded-file-size">856 KB</span>
+                            </div>
+                            <button class="remove-file-btn">Remove</button>
+                        </div>
+                        <div class="uploaded-file">
+                            <div class="uploaded-file-info">
+                                <span>🖼️</span>
+                                <span class="uploaded-file-name">Club Logo.png</span>
+                                <span class="uploaded-file-size">245 KB</span>
+                            </div>
+                            <button class="remove-file-btn">Remove</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button class="btn" onclick="prevSection('contacts')">Previous</button>
+                <button class="btn btn-primary" onclick="nextSection('wishlist')">Next: Funding Wishlist</button>
+            </div>
+        </div>
+
+        <!-- Section 5: Funding Wishlist -->
+        <div class="form-section" id="section-wishlist">
+            <h2 class="section-title">Funding Wishlist</h2>
+            <p class="section-description">Select all items that apply or may apply in the future to your Club. This helps us match you with relevant grant opportunities.</p>
+
+            <div class="form-subsection">
+                <h3 class="subsection-title">Programs & Participation</h3>
+                <div class="checkbox-group" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
+                    <div class="checkbox-item"><input type="checkbox" id="wish-cald"><label for="wish-cald">Culturally and Linguistically Diverse (CALD) Programs</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-coaching" checked><label for="wish-coaching">Coaching Development Program</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-committee"><label for="wish-committee">Committee Education Programs</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-community"><label for="wish-community">Community Participation Programs (non-club members)</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-school"><label for="wish-school">School Engagement Programs</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-female" checked><label for="wish-female">Female Participation Programs</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-indigenous"><label for="wish-indigenous">Indigenous Participation Programs</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-junior" checked><label for="wish-junior">Junior Participation Programs</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-allabilities"><label for="wish-allabilities">Programs (All-abilities / Disabled participants)</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-socio"><label for="wish-socio">Socio-economically Disadvantaged Participation Programs</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-refs"><label for="wish-refs">Training for referees / officials / umpires</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-volunteers" checked><label for="wish-volunteers">Training for volunteers</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-voledu"><label for="wish-voledu">Volunteer Education Programs</label></div>
+                </div>
+            </div>
+
+            <div class="form-subsection">
+                <h3 class="subsection-title">Equipment & Safety</h3>
+                <div class="checkbox-group" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
+                    <div class="checkbox-item"><input type="checkbox" id="wish-av"><label for="wish-av">Audio-visual equipment (speakers, TVs, etc.)</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-defib" checked><label for="wish-defib">Defibrillator</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-firstaid" checked><label for="wish-firstaid">First Aid Equipment</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-rescue"><label for="wish-rescue">Rescue Equipment</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-training" checked><label for="wish-training">Training Equipment</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-uniforms" checked><label for="wish-uniforms">Uniforms / Attire</label></div>
+                </div>
+            </div>
+
+            <div class="form-subsection">
+                <h3 class="subsection-title">Fields, Courts & Playing Surfaces</h3>
+                <div class="checkbox-group" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
+                    <div class="checkbox-item"><input type="checkbox" id="wish-grass" checked><label for="wish-grass">Grass field / pitch</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-synthetic"><label for="wish-synthetic">Synthetic field / pitch</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-lines"><label for="wish-lines">Line Markings</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-drainage" checked><label for="wish-drainage">Ground / Field Drainage</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-permgoals" checked><label for="wish-permgoals">Permanent Goals</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-portgoals"><label for="wish-portgoals">Portable Goals</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-netting"><label for="wish-netting">Soft netting (e.g. nets behind footy goals)</label></div>
+                </div>
+            </div>
+
+            <div class="form-subsection">
+                <h3 class="subsection-title">Lighting & Power</h3>
+                <div class="checkbox-group" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
+                    <div class="checkbox-item"><input type="checkbox" id="wish-lighting"><label for="wish-lighting">Lighting</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-newlighting"><label for="wish-newlighting">New on-field lighting (no existing lighting)</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-upgradelighting" checked><label for="wish-upgradelighting">Upgrade / replace existing on-field lighting</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-offlighting"><label for="wish-offlighting">Off-field lighting upgrades (carpark, safety lighting)</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-solar" checked><label for="wish-solar">Solar Panels</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-battery"><label for="wish-battery">Solar Battery</label></div>
+                </div>
+            </div>
+
+            <div class="form-subsection">
+                <h3 class="subsection-title">Pavilions, Buildings & Amenities</h3>
+                <div class="checkbox-group" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
+                    <div class="checkbox-item"><input type="checkbox" id="wish-furnish"><label for="wish-furnish">Pavilion furnishings</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-hvac"><label for="wish-hvac">Pavilion Heating / Cooling</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-change"><label for="wish-change">Change rooms</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-femalechange" checked><label for="wish-femalechange">Female Friendly Change Rooms</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-addchange"><label for="wish-addchange">Additional Change Rooms</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-toilets"><label for="wish-toilets">Toilets / Showers</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-toiletredev"><label for="wish-toiletredev">Toilet redevelopments</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-addtoilets"><label for="wish-addtoilets">Additional Toilets</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-kitchen" checked><label for="wish-kitchen">Kitchen / Canteen Upgrades</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-canteen"><label for="wish-canteen">Canteen / Kiosk</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-umpire"><label for="wish-umpire">Umpire / Referee / Officials Room</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-trainamen"><label for="wish-trainamen">Training Amenities</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-ventilation"><label for="wish-ventilation">Ventilation</label></div>
+                </div>
+            </div>
+
+            <div class="form-subsection">
+                <h3 class="subsection-title">Access, Inclusion & Public Areas</h3>
+                <div class="checkbox-group" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
+                    <div class="checkbox-item"><input type="checkbox" id="wish-disabilityamen"><label for="wish-disabilityamen">All-abilities / Disability Amenities</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-accesslevels"><label for="wish-accesslevels">Increased access levels to existing facilities</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-addfacility"><label for="wish-addfacility">Access to an additional facility</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-concourse"><label for="wish-concourse">Concourse / Walkways</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-seating" checked><label for="wish-seating">Spectator Seating</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-shade" checked><label for="wish-shade">Permanent Shade Structures</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-bbq"><label for="wish-bbq">BBQ Area</label></div>
+                </div>
+            </div>
+
+            <div class="form-subsection">
+                <h3 class="subsection-title">Carpark & External Works</h3>
+                <div class="checkbox-group" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
+                    <div class="checkbox-item"><input type="checkbox" id="wish-parking"><label for="wish-parking">Additional Car Parking Space</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-resurface"><label for="wish-resurface">Carpark resurfacing</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-carparksafety"><label for="wish-carparksafety">Carpark Safety Improvements</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-permfence"><label for="wish-permfence">Permanent Fencing</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="wish-tempfence"><label for="wish-tempfence">Temporary Fencing</label></div>
+                </div>
+            </div>
+
+            <div class="form-subsection">
+                <h3 class="subsection-title">Other</h3>
+                <div class="form-group">
+                    <label>Other items not listed above</label>
+                    <textarea rows="3" placeholder="Please specify any other funding needs..."></textarea>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button class="btn" onclick="prevSection('overview')">Previous</button>
+                <button class="btn btn-primary" onclick="nextSection('financial')">Next: Financial Data</button>
+            </div>
+        </div>
+
+        <!-- Section 6: Financial Data -->
+        <div class="form-section" id="section-financial">
+            <h2 class="section-title">Financial Data</h2>
+            <p class="section-description">Update your organisation's financial information</p>
+
+            <div class="form-subsection">
+                <h3 class="subsection-title">Bank Account Details</h3>
+                <div class="form-group">
+                    <label class="required">Bank account held in organisation name?</label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="bank-org-yes" name="bank-org" value="yes" checked>
+                            <label for="bank-org-yes">Yes</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="bank-org-no" name="bank-org" value="no">
+                            <label for="bank-org-no">No</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label class="required">Account Name</label>
+                        <input type="text" value="Ryde Saints Junior Football Club Inc">
+                    </div>
+                    <div class="form-group">
+                        <label class="required">BSB</label>
+                        <input type="text" value="***-***" placeholder="123-456">
+                    </div>
+                    <div class="form-group">
+                        <label class="required">Account Number</label>
+                        <input type="text" value="****4567" placeholder="12345678">
+                    </div>
+                </div>
+                <div class="form-hint" style="background: #FFFBEB; padding: 1rem; border-radius: 6px; border-left: 2px solid #D97706; margin-top: 1rem;">
+                    🔒 Bank details are encrypted and securely stored
+                </div>
+            </div>
+
+            <div class="form-subsection">
+                <h3 class="subsection-title">Grant History</h3>
+                <div class="form-group">
+                    <label class="required">Has the organisation previously managed grant funding?</label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="grant-history-yes" name="grant-history" value="yes" checked>
+                            <label for="grant-history-yes">Yes</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="grant-history-no" name="grant-history" value="no">
+                            <label for="grant-history-no">No</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="required">Any outstanding or incomplete grant acquittals?</label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="acquittal-yes" name="acquittal" value="yes">
+                            <label for="acquittal-yes">Yes</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="acquittal-no" name="acquittal" value="no" checked>
+                            <label for="acquittal-no">No</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button class="btn" onclick="prevSection('wishlist')">Previous</button>
+                <button class="btn btn-primary" onclick="nextSection('communications')">Next: Communications</button>
+            </div>
+        </div>
+
+        <!-- Section 7: Communications -->
+        <div class="form-section" id="section-communications">
+            <h2 class="section-title">Communications & Public Presence</h2>
+            <p class="section-description">Update your organisation's website and social media details</p>
+
+            <div class="form-subsection">
+                <h3 class="subsection-title">Online Presence</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Website URL</label>
+                        <input type="url" value="https://www.rydesaintsjfc.com.au">
+                    </div>
+                    <div class="form-group">
+                        <label>Facebook Page</label>
+                        <input type="url" value="https://facebook.com/rydesaintsjfc">
+                    </div>
+                    <div class="form-group">
+                        <label>Instagram Page</label>
+                        <input type="url" value="https://instagram.com/rydesaintsjfc">
+                    </div>
+                    <div class="form-group">
+                        <label>LinkedIn Page</label>
+                        <input type="url" placeholder="https://linkedin.com/company/yourclub">
+                    </div>
+                    <div class="form-group">
+                        <label>Twitter / X</label>
+                        <input type="url" placeholder="https://twitter.com/yourclub">
+                    </div>
+                    <div class="form-group">
+                        <label>YouTube Channel</label>
+                        <input type="url" placeholder="https://youtube.com/@yourclub">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button class="btn" onclick="prevSection('financial')">Previous</button>
+                <button class="btn btn-success" onclick="saveChanges()">Save All Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.section-nav button').forEach(b => b.classList.remove('active'));
+            document.getElementById('section-' + sectionId).classList.add('active');
+            event.target.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function nextSection(sectionId) {
+            document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.section-nav button').forEach(b => b.classList.remove('active'));
+            document.getElementById('section-' + sectionId).classList.add('active');
+            
+            // Find and activate the corresponding nav button
+            const navButtons = document.querySelectorAll('.section-nav button');
+            navButtons.forEach(btn => {
+                if (btn.textContent.toLowerCase().includes(sectionId.split('-')[0])) {
+                    btn.classList.add('active');
+                }
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function prevSection(sectionId) {
+            nextSection(sectionId);
+        }
+
+        function saveChanges() {
+            alert('Changes saved successfully! (Demo)\n\nIn production, this would save to the database.');
+            window.location.href = 'club-profile-grantwriter-v2.html';
+        }
+
+        function cancelEdit() {
+            if (confirm('Are you sure you want to cancel? Any unsaved changes will be lost.')) {
+                window.location.href = 'club-profile-grantwriter-v2.html';
+            }
+        }
+    </script>
+</body>
+</html>
