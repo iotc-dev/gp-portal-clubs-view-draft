@@ -26,18 +26,14 @@
         .header-content { max-width: 1400px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 0.875rem; font-weight: 600; color: var(--color-text); display: flex; align-items: center; gap: 0.75rem; }
         .logo-icon { width: 32px; height: 32px; background: var(--color-primary); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.875rem; }
-        .header-nav { display: flex; align-items: center; gap: 1.5rem; }
-        .header-nav a { font-size: 0.875rem; color: var(--color-text-secondary); text-decoration: none; font-weight: 500; }
-        .header-nav a:hover { color: var(--color-text); }
-        .header-nav a.active { color: var(--color-accent); }
         .user-info { font-size: 0.875rem; color: var(--color-text-secondary); }
         
         .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
         
         /* Breadcrumb */
         .breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--color-text-secondary); margin-bottom: 1.5rem; }
-        .breadcrumb a { color: var(--color-text-secondary); text-decoration: none; }
-        .breadcrumb a:hover { color: var(--color-accent); }
+        .breadcrumb a { color: var(--color-accent); text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
         .breadcrumb .current { color: var(--color-text); font-weight: 500; }
         
         /* Grant Header Card */
@@ -51,7 +47,6 @@
         .grant-meta-label { font-size: 0.75rem; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
         .grant-meta-value { font-size: 1rem; font-weight: 600; color: var(--color-text); }
         .grant-meta-value.urgent { color: var(--color-danger); }
-        .grant-actions { display: flex; gap: 0.75rem; }
         
         /* Stats Row */
         .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border); }
@@ -111,9 +106,9 @@
         .status-pending { background: #FEF2F2; color: #991B1B; border-color: #FECACA; }
         .status-not-interested { background: #F1F5F9; color: #475569; border-color: #CBD5E1; }
         
-        /* Account Manager */
-        .account-manager-cell { display: flex; align-items: center; gap: 0.5rem; }
-        .account-manager-avatar { width: 24px; height: 24px; background: var(--color-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.625rem; }
+        /* Account Executive */
+        .account-executive-cell { display: flex; align-items: center; gap: 0.5rem; }
+        .account-executive-avatar { width: 24px; height: 24px; background: var(--color-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.625rem; }
         
         /* Pending Items */
         .pending-items { display: flex; align-items: center; gap: 0.5rem; }
@@ -157,13 +152,7 @@
         <div class="header-content">
             <div class="logo">
                 <div class="logo-icon">GP</div>
-                Grant Coordination Portal
-            </div>
-            <div class="header-nav">
-                <a href="staff-dashboard.html">Dashboard</a>
-                <a href="#">Clubs</a>
-                <a href="#" class="active">Grants</a>
-                <a href="#">Reports</a>
+                Grant Professionals Portal
             </div>
             <div class="user-info">Sarah Williams · Grant Writer</div>
         </div>
@@ -172,8 +161,6 @@
     <div class="container">
         <div class="breadcrumb">
             <a href="staff-dashboard.html">Dashboard</a>
-            <span>›</span>
-            <a href="staff-dashboard.html">Grants</a>
             <span>›</span>
             <span class="current">Telstra Footy Grants 2026</span>
         </div>
@@ -202,10 +189,6 @@
                             <span class="grant-meta-value">Open - Closing Soon</span>
                         </div>
                     </div>
-                </div>
-                <div class="grant-actions">
-                    <button class="btn">View Guidelines</button>
-                    <button class="btn btn-primary">+ Add Club</button>
                 </div>
             </div>
 
@@ -243,9 +226,9 @@
                     </select>
                 </div>
                 <div class="filter-group">
-                    <span class="filter-label">Account Manager</span>
+                    <span class="filter-label">Account Executive</span>
                     <select class="filter-select" id="filter-manager">
-                        <option value="">All Managers</option>
+                        <option value="">All Account Executives</option>
                         <option value="john-smith">John Smith</option>
                         <option value="emma-wilson">Emma Wilson</option>
                         <option value="david-chen">David Chen</option>
@@ -281,7 +264,7 @@
                     <tr>
                         <th>Club</th>
                         <th>Plan</th>
-                        <th>Account Manager</th>
+                        <th>Account Executive</th>
                         <th>Status</th>
                         <th>Pending Items</th>
                         <th>Last Updated</th>
@@ -292,7 +275,7 @@
                     <tr onclick="viewClub('ryde-saints')">
                         <td>
                             <div class="club-name-cell">
-                                <div class="club-avatar">⚽</div>
+                                <div class="club-avatar">🏉</div>
                                 <div>
                                     <div class="club-name">Ryde Saints Junior Football Club</div>
                                     <div class="club-sport">AFL · Ryde, NSW</div>
@@ -301,8 +284,8 @@
                         </td>
                         <td><span class="subscription-badge ready">Grant Ready</span></td>
                         <td>
-                            <div class="account-manager-cell">
-                                <div class="account-manager-avatar">JS</div>
+                            <div class="account-executive-cell">
+                                <div class="account-executive-avatar">JS</div>
                                 <span>John Smith</span>
                             </div>
                         </td>
@@ -315,14 +298,14 @@
                         </td>
                         <td>2 hours ago</td>
                         <td>
-                            <button class="btn btn-sm" onclick="event.stopPropagation(); viewClub('ryde-saints')">View</button>
+                            <a href="club-profile-view.html" class="btn btn-sm" onclick="event.stopPropagation()">View</a>
                             <button class="btn btn-sm btn-success" onclick="event.stopPropagation(); notifyClub('ryde-saints')">Notify</button>
                         </td>
                     </tr>
                     <tr onclick="viewClub('epping-afl')">
                         <td>
                             <div class="club-name-cell">
-                                <div class="club-avatar">⚽</div>
+                                <div class="club-avatar">🏉</div>
                                 <div>
                                     <div class="club-name">Epping Eastwood Tigers AFC</div>
                                     <div class="club-sport">AFL · Epping, NSW</div>
@@ -331,8 +314,8 @@
                         </td>
                         <td><span class="subscription-badge growth">Growth</span></td>
                         <td>
-                            <div class="account-manager-cell">
-                                <div class="account-manager-avatar">EW</div>
+                            <div class="account-executive-cell">
+                                <div class="account-executive-avatar">EW</div>
                                 <span>Emma Wilson</span>
                             </div>
                         </td>
@@ -345,14 +328,14 @@
                         </td>
                         <td>Yesterday</td>
                         <td>
-                            <button class="btn btn-sm" onclick="event.stopPropagation(); viewClub('epping-afl')">View</button>
+                            <a href="club-profile-view.html" class="btn btn-sm" onclick="event.stopPropagation()">View</a>
                             <button class="btn btn-sm btn-success" onclick="event.stopPropagation(); notifyClub('epping-afl')">Notify</button>
                         </td>
                     </tr>
                     <tr onclick="viewClub('castle-hill-afl')">
                         <td>
                             <div class="club-name-cell">
-                                <div class="club-avatar">⚽</div>
+                                <div class="club-avatar">🏉</div>
                                 <div>
                                     <div class="club-name">Castle Hill Hawks Junior AFL</div>
                                     <div class="club-sport">AFL · Castle Hill, NSW</div>
@@ -361,8 +344,8 @@
                         </td>
                         <td><span class="subscription-badge ready">Grant Ready</span></td>
                         <td>
-                            <div class="account-manager-cell">
-                                <div class="account-manager-avatar">JS</div>
+                            <div class="account-executive-cell">
+                                <div class="account-executive-avatar">JS</div>
                                 <span>John Smith</span>
                             </div>
                         </td>
@@ -375,13 +358,13 @@
                         </td>
                         <td>3 days ago</td>
                         <td>
-                            <button class="btn btn-sm" onclick="event.stopPropagation(); viewClub('castle-hill-afl')">View</button>
+                            <a href="club-profile-view.html" class="btn btn-sm" onclick="event.stopPropagation()">View</a>
                         </td>
                     </tr>
                     <tr onclick="viewClub('manly-afl')">
                         <td>
                             <div class="club-name-cell">
-                                <div class="club-avatar">⚽</div>
+                                <div class="club-avatar">🏉</div>
                                 <div>
                                     <div class="club-name">Manly Warringah Giants AFC</div>
                                     <div class="club-sport">AFL · Manly, NSW</div>
@@ -390,8 +373,8 @@
                         </td>
                         <td><span class="subscription-badge enterprise">Enterprise</span></td>
                         <td>
-                            <div class="account-manager-cell">
-                                <div class="account-manager-avatar">DC</div>
+                            <div class="account-executive-cell">
+                                <div class="account-executive-avatar">DC</div>
                                 <span>David Chen</span>
                             </div>
                         </td>
@@ -404,14 +387,14 @@
                         </td>
                         <td>1 day ago</td>
                         <td>
-                            <button class="btn btn-sm" onclick="event.stopPropagation(); viewClub('manly-afl')">View</button>
+                            <a href="club-profile-view.html" class="btn btn-sm" onclick="event.stopPropagation()">View</a>
                             <button class="btn btn-sm btn-success" onclick="event.stopPropagation(); notifyClub('manly-afl')">Notify</button>
                         </td>
                     </tr>
                     <tr onclick="viewClub('penrith-afl')">
                         <td>
                             <div class="club-name-cell">
-                                <div class="club-avatar">⚽</div>
+                                <div class="club-avatar">🏉</div>
                                 <div>
                                     <div class="club-name">Penrith Districts Junior AFL</div>
                                     <div class="club-sport">AFL · Penrith, NSW</div>
@@ -420,8 +403,8 @@
                         </td>
                         <td><span class="subscription-badge growth">Growth</span></td>
                         <td>
-                            <div class="account-manager-cell">
-                                <div class="account-manager-avatar">EW</div>
+                            <div class="account-executive-cell">
+                                <div class="account-executive-avatar">EW</div>
                                 <span>Emma Wilson</span>
                             </div>
                         </td>
@@ -434,13 +417,13 @@
                         </td>
                         <td>5 days ago</td>
                         <td>
-                            <button class="btn btn-sm" onclick="event.stopPropagation(); viewClub('penrith-afl')">View</button>
+                            <a href="club-profile-view.html" class="btn btn-sm" onclick="event.stopPropagation()">View</a>
                         </td>
                     </tr>
                     <tr onclick="viewClub('bankstown-afl')">
                         <td>
                             <div class="club-name-cell">
-                                <div class="club-avatar">⚽</div>
+                                <div class="club-avatar">🏉</div>
                                 <div>
                                     <div class="club-name">Bankstown Bulls AFL Club</div>
                                     <div class="club-sport">AFL · Bankstown, NSW</div>
@@ -449,8 +432,8 @@
                         </td>
                         <td><span class="subscription-badge starter">Starter</span></td>
                         <td>
-                            <div class="account-manager-cell">
-                                <div class="account-manager-avatar">JS</div>
+                            <div class="account-executive-cell">
+                                <div class="account-executive-avatar">JS</div>
                                 <span>John Smith</span>
                             </div>
                         </td>
@@ -463,14 +446,14 @@
                         </td>
                         <td>4 hours ago</td>
                         <td>
-                            <button class="btn btn-sm" onclick="event.stopPropagation(); viewClub('bankstown-afl')">View</button>
+                            <a href="club-profile-view.html" class="btn btn-sm" onclick="event.stopPropagation()">View</a>
                             <button class="btn btn-sm btn-success" onclick="event.stopPropagation(); notifyClub('bankstown-afl')">Notify</button>
                         </td>
                     </tr>
                     <tr onclick="viewClub('sutherland-afl')">
                         <td>
                             <div class="club-name-cell">
-                                <div class="club-avatar">⚽</div>
+                                <div class="club-avatar">🏉</div>
                                 <div>
                                     <div class="club-name">Sutherland Shire Junior AFL</div>
                                     <div class="club-sport">AFL · Sutherland, NSW</div>
@@ -479,8 +462,8 @@
                         </td>
                         <td><span class="subscription-badge ready">Grant Ready</span></td>
                         <td>
-                            <div class="account-manager-cell">
-                                <div class="account-manager-avatar">DC</div>
+                            <div class="account-executive-cell">
+                                <div class="account-executive-avatar">DC</div>
                                 <span>David Chen</span>
                             </div>
                         </td>
@@ -493,13 +476,13 @@
                         </td>
                         <td>1 week ago</td>
                         <td>
-                            <button class="btn btn-sm" onclick="event.stopPropagation(); viewClub('sutherland-afl')">View</button>
+                            <a href="club-profile-view.html" class="btn btn-sm" onclick="event.stopPropagation()">View</a>
                         </td>
                     </tr>
                     <tr onclick="viewClub('cronulla-afl')">
                         <td>
                             <div class="club-name-cell">
-                                <div class="club-avatar">⚽</div>
+                                <div class="club-avatar">🏉</div>
                                 <div>
                                     <div class="club-name">Cronulla Seagulls AFC</div>
                                     <div class="club-sport">AFL · Cronulla, NSW</div>
@@ -508,8 +491,8 @@
                         </td>
                         <td><span class="subscription-badge growth">Growth</span></td>
                         <td>
-                            <div class="account-manager-cell">
-                                <div class="account-manager-avatar">EW</div>
+                            <div class="account-executive-cell">
+                                <div class="account-executive-avatar">EW</div>
                                 <span>Emma Wilson</span>
                             </div>
                         </td>
@@ -522,7 +505,7 @@
                         </td>
                         <td>2 days ago</td>
                         <td>
-                            <button class="btn btn-sm" onclick="event.stopPropagation(); viewClub('cronulla-afl')">View</button>
+                            <a href="club-profile-view.html" class="btn btn-sm" onclick="event.stopPropagation()">View</a>
                         </td>
                     </tr>
                 </tbody>
@@ -541,7 +524,7 @@
 
     <script>
         function viewClub(clubId) {
-            window.location.href = 'club-profile-grantwriter-v2.html';
+            window.location.href = 'club-profile-view.html';
         }
 
         function notifyClub(clubId) {
