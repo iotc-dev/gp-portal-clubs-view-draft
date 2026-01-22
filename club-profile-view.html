@@ -105,15 +105,19 @@
         .type-file { background: #DBEAFE; color: #1E40AF; }
         .type-confirm { background: #D1FAE5; color: #065F46; }
         .type-text { background: #FEF3C7; color: #92400E; }
+        .type-select { background: #E0E7FF; color: #3730A3; }
         .status-indicator { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.25rem 0.625rem; border-radius: 12px; font-size: 0.75rem; font-weight: 500; }
         .status-pending { background: #FEE2E2; color: #DC2626; }
         .status-pending::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #DC2626; }
         .status-received { background: #D1FAE5; color: #059669; }
         .status-received::before { content: '✓ '; }
-        .notes-text { font-size: 0.8125rem; color: var(--color-text-secondary); font-style: italic; }
-        .actions-cell { display: flex; gap: 0.25rem; }
-        .icon-btn { padding: 0.375rem; border: none; background: none; cursor: pointer; color: var(--color-text-muted); font-size: 0.875rem; border-radius: 4px; }
-        .icon-btn:hover { background: var(--color-bg-secondary); color: var(--color-text); }
+        .notes-text { font-size: 0.8125rem; color: var(--color-text-secondary); }
+        .response-cell { min-width: 200px; }
+        .response-input { width: 100%; padding: 0.5rem; border: 1px solid var(--color-border); border-radius: 4px; font-size: 0.8125rem; resize: vertical; min-height: 60px; }
+        .response-text { font-size: 0.8125rem; color: var(--color-text); background: #F0FDF4; padding: 0.5rem; border-radius: 4px; border: 1px solid #BBF7D0; }
+        .response-file { display: flex; align-items: center; gap: 0.5rem; }
+        .file-upload-btn { padding: 0.375rem 0.75rem; background: var(--color-accent); color: white; border: none; border-radius: 4px; font-size: 0.75rem; cursor: pointer; }
+        .file-uploaded { font-size: 0.8125rem; color: var(--color-success); display: flex; align-items: center; gap: 0.25rem; }
         .btn { padding: 0.5rem 1rem; border: 1px solid var(--color-border); border-radius: 6px; font-size: 0.8125rem; font-weight: 500; cursor: pointer; background: var(--color-bg); color: var(--color-text); display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; }
         .btn:hover { background: var(--color-bg-secondary); }
         .btn-primary { background: var(--color-accent); color: white; border-color: var(--color-accent); }
@@ -132,6 +136,13 @@
         .won-item { }
         .won-label { font-size: 0.6875rem; color: var(--color-text-muted); text-transform: uppercase; margin-bottom: 0.25rem; }
         .won-value { font-size: 0.875rem; font-weight: 500; }
+        .edit-mode .response-text { display: none; }
+        .edit-mode .response-input { display: block; }
+        .view-mode .response-input { display: none; }
+        .view-mode .response-text { display: block; }
+        .edit-actions { display: none; }
+        .edit-mode .edit-actions { display: flex; gap: 0.5rem; }
+        .edit-mode .view-actions { display: none; }
         @media (max-width: 1024px) { .club-meta-grid { grid-template-columns: repeat(3, 1fr); } .info-grid { grid-template-columns: repeat(2, 1fr); } .won-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 768px) { .container { padding: 1rem; } .club-meta-grid, .info-grid, .won-grid { grid-template-columns: 1fr; } }
     </style>
@@ -282,62 +293,147 @@
                 <div class="interest-row"><div class="interest-info"><span>📌</span><span>Club expressed interest · Eligibility confirmed</span></div><div class="interest-actions"><span style="font-size:0.8125rem;color:var(--color-text-secondary);font-style:italic;">⏳ Waiting for Grant Professional to review eligibility</span></div></div>
             </div>
 
-            <!-- Proceeding Grant 1 - with Pending Items -->
+            <!-- Proceeding Grant 1 - Stronger Communities with real example data -->
             <div class="grant-card">
                 <div class="grant-card-header">
-                    <div class="grant-card-info"><div class="grant-card-icon">🏈</div><div><div class="grant-card-title">Telstra Footy Grants 2026</div><div class="grant-card-subtitle">AFL Community Grants · Corporate</div></div></div>
-                    <div class="grant-card-meta">
-                        <div class="grant-meta-item"><div class="grant-meta-label">Amount</div><div class="grant-meta-value">Up to $20,000</div></div>
-                        <div class="grant-meta-item"><div class="grant-meta-label">Open Date</div><div class="grant-meta-value">Nov 1, 2025</div></div>
-                        <div class="grant-meta-item"><div class="grant-meta-label">Close Date</div><div class="grant-meta-value urgent">Feb 1, 2026 (10 days)</div></div>
-                        <div class="grant-meta-item"><div class="grant-meta-label">Interest</div><div class="grant-meta-value"><span class="interest-badge interest-interested">Interested</span></div></div>
-                        <div class="grant-meta-item"><div class="grant-meta-label">Status</div><div class="grant-meta-value"><span class="status-badge status-proceeding">Proceeding</span></div></div>
-                    </div>
-                </div>
-                <div class="pending-table-container">
-                    <div class="pending-table-header">
-                        <div class="pending-table-title">⚠️ Pending Information Required <span class="pending-count-badge">3 items</span></div>
-                        <div style="display:flex;gap:0.5rem"><button class="btn btn-sm">+ Add Item</button><button class="btn btn-sm btn-success">✉️ Notify Club</button><button class="btn btn-sm btn-warning">👤 Notify Account Executive</button></div>
-                    </div>
-                    <table class="pending-table">
-                        <thead><tr><th>Item</th><th>Type</th><th>Status</th><th>Notes</th><th>Requested</th><th>Actions</th></tr></thead>
-                        <tbody>
-                            <tr><td><div class="item-name">Upload defibrillator quote</div><div class="item-description">Quote from approved supplier</div></td><td><span class="type-badge type-file">📎 File Upload</span></td><td><span class="status-indicator status-pending">Pending</span></td><td><span class="notes-text">Must be dated within 30 days</span></td><td>Jan 18, 2026<br><small style="color:var(--color-text-muted)">by Sarah Williams</small></td><td class="actions-cell"><button class="icon-btn">✏️</button><button class="icon-btn">🗑️</button></td></tr>
-                            <tr><td><div class="item-name">Confirm portable seating qty</div><div class="item-description">How many seats needed?</div></td><td><span class="type-badge type-confirm">✓ Confirmation</span></td><td><span class="status-indicator status-pending">Pending</span></td><td><span class="notes-text">Exact number for budget</span></td><td>Jan 17, 2026<br><small style="color:var(--color-text-muted)">by Sarah Williams</small></td><td class="actions-cell"><button class="icon-btn">✏️</button><button class="icon-btn">🗑️</button></td></tr>
-                            <tr><td><div class="item-name">Upload shade structure quote</div><div class="item-description">Quote for permanent structures</div></td><td><span class="type-badge type-file">📎 File Upload</span></td><td><span class="status-indicator status-received">Received</span></td><td><span class="notes-text">—</span></td><td>Jan 15, 2026<br><small style="color:var(--color-text-muted)">by Sarah Williams</small></td><td class="actions-cell"><button class="icon-btn">👁️</button></td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Proceeding Grant 2 - with Pending Items -->
-            <div class="grant-card">
-                <div class="grant-card-header">
-                    <div class="grant-card-info"><div class="grant-card-icon">🏛️</div><div><div class="grant-card-title">Stronger Communities Programme R10</div><div class="grant-card-subtitle">Federal Government · Infrastructure</div></div></div>
+                    <div class="grant-card-info"><div class="grant-card-icon">🏛️</div><div><div class="grant-card-title">Stronger Communities Programme R10</div><div class="grant-card-subtitle">Federal Government · Infrastructure · Due 14th Feb</div></div></div>
                     <div class="grant-card-meta">
                         <div class="grant-meta-item"><div class="grant-meta-label">Amount</div><div class="grant-meta-value">Up to $20,000</div></div>
                         <div class="grant-meta-item"><div class="grant-meta-label">Open Date</div><div class="grant-meta-value">Dec 1, 2025</div></div>
                         <div class="grant-meta-item"><div class="grant-meta-label">Close Date</div><div class="grant-meta-value urgent">Feb 14, 2026</div></div>
-                        <div class="grant-meta-item"><div class="grant-meta-label">Interest</div><div class="grant-meta-value"><span class="interest-badge interest-need-info">Need More Info</span></div></div>
+                        <div class="grant-meta-item"><div class="grant-meta-label">Interest</div><div class="grant-meta-value"><span class="interest-badge interest-interested">Interested</span></div></div>
                         <div class="grant-meta-item"><div class="grant-meta-label">Status</div><div class="grant-meta-value"><span class="status-badge status-proceeding">Proceeding</span></div></div>
                     </div>
                 </div>
-                <div class="pending-table-container">
+                <div class="pending-table-container view-mode" id="table-stronger">
                     <div class="pending-table-header">
-                        <div class="pending-table-title">⚠️ Pending Information Required <span class="pending-count-badge">2 items</span></div>
-                        <div style="display:flex;gap:0.5rem"><button class="btn btn-sm">+ Add Item</button><button class="btn btn-sm btn-success">✉️ Notify Club</button><button class="btn btn-sm btn-warning">👤 Notify Account Executive</button></div>
+                        <div class="pending-table-title">⚠️ Pending Information Required <span class="pending-count-badge">3 items</span></div>
+                        <div style="display:flex;gap:0.5rem">
+                            <div class="view-actions">
+                                <button class="btn btn-sm" onclick="toggleEditMode('table-stronger')">✏️ Edit Table</button>
+                                <button class="btn btn-sm btn-success">✉️ Notify Club</button>
+                                <button class="btn btn-sm btn-warning">👤 Notify Account Executive</button>
+                            </div>
+                            <div class="edit-actions">
+                                <button class="btn btn-sm btn-primary" onclick="saveTable('table-stronger')">💾 Save Changes</button>
+                                <button class="btn btn-sm" onclick="toggleEditMode('table-stronger')">Cancel</button>
+                            </div>
+                        </div>
                     </div>
                     <table class="pending-table">
-                        <thead><tr><th>Item</th><th>Type</th><th>Status</th><th>Notes</th><th>Requested</th><th>Actions</th></tr></thead>
+                        <thead><tr><th>Item</th><th>Type</th><th>Status</th><th>Notes</th><th>Response</th></tr></thead>
                         <tbody>
-                            <tr><td><div class="item-name">Council letter of support</div><div class="item-description">Letter from City of Ryde</div></td><td><span class="type-badge type-file">📎 File Upload</span></td><td><span class="status-indicator status-pending">Pending</span></td><td><span class="notes-text">Contact council grants team</span></td><td>Jan 12, 2026</td><td class="actions-cell"><button class="icon-btn">✏️</button><button class="icon-btn">🗑️</button></td></tr>
-                            <tr><td><div class="item-name">Project timeline confirmation</div><div class="item-description">Expected completion date</div></td><td><span class="type-badge type-text">✍️ Short Text</span></td><td><span class="status-indicator status-pending">Pending</span></td><td><span class="notes-text">—</span></td><td>Jan 12, 2026</td><td class="actions-cell"><button class="icon-btn">✏️</button><button class="icon-btn">🗑️</button></td></tr>
+                            <tr>
+                                <td><div class="item-name">Confirm estimated cost for bathroom renovation</div><div class="item-description">Include disability amenities and gender-neutral facilities</div></td>
+                                <td><span class="type-badge type-text">✍️ Text Response</span></td>
+                                <td><span class="status-indicator status-pending">Pending</span></td>
+                                <td><span class="notes-text">We do not require official quotes—just an estimate would be sufficient, and we can proceed to apply for the full grant value of $20,000.</span></td>
+                                <td class="response-cell">
+                                    <textarea class="response-input" placeholder="Enter your response..."></textarea>
+                                    <div class="response-text" style="display:none;"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div class="item-name">Confirm seating/tables for canteen area</div><div class="item-description">Outdoor furniture & marquee for area in front of canteen</div></td>
+                                <td><span class="type-badge type-confirm">✓ Confirmation</span></td>
+                                <td><span class="status-indicator status-pending">Pending</span></td>
+                                <td><span class="notes-text">Please confirm with the committee whether to also pursue seating or tables for the area in front of the canteen and marquee. Has this been confirmed?</span></td>
+                                <td class="response-cell">
+                                    <textarea class="response-input" placeholder="Yes/No and details..."></textarea>
+                                    <div class="response-text" style="display:none;"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div class="item-name">Brief on requirements and issues</div><div class="item-description">Document the need and current issues</div></td>
+                                <td><span class="type-badge type-text">✍️ Text Response</span></td>
+                                <td><span class="status-indicator status-pending">Pending</span></td>
+                                <td><span class="notes-text">Please provide a brief on the requirements and the issues the club is facing due to the lack of these items.</span></td>
+                                <td class="response-cell">
+                                    <textarea class="response-input" placeholder="Describe the issues..."></textarea>
+                                    <div class="response-text" style="display:none;"></div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Lodged Grant -->
+            <!-- Proceeding Grant 2 - Community Building Partnership with real example data -->
+            <div class="grant-card">
+                <div class="grant-card-header">
+                    <div class="grant-card-info"><div class="grant-card-icon">🏗️</div><div><div class="grant-card-title">Community Building Partnership Program</div><div class="grant-card-subtitle">State Government · Infrastructure · Due 21st Feb</div></div></div>
+                    <div class="grant-card-meta">
+                        <div class="grant-meta-item"><div class="grant-meta-label">Amount</div><div class="grant-meta-value">Up to $50,000</div></div>
+                        <div class="grant-meta-item"><div class="grant-meta-label">Open Date</div><div class="grant-meta-value">Jan 15, 2026</div></div>
+                        <div class="grant-meta-item"><div class="grant-meta-label">Close Date</div><div class="grant-meta-value urgent">Feb 21, 2026</div></div>
+                        <div class="grant-meta-item"><div class="grant-meta-label">Interest</div><div class="grant-meta-value"><span class="interest-badge interest-need-info">Need More Info</span></div></div>
+                        <div class="grant-meta-item"><div class="grant-meta-label">Status</div><div class="grant-meta-value"><span class="status-badge status-proceeding">Proceeding</span></div></div>
+                    </div>
+                </div>
+                <div class="pending-table-container view-mode" id="table-cbp">
+                    <div class="pending-table-header">
+                        <div class="pending-table-title">⚠️ Pending Information Required <span class="pending-count-badge">4 items</span></div>
+                        <div style="display:flex;gap:0.5rem">
+                            <div class="view-actions">
+                                <button class="btn btn-sm" onclick="toggleEditMode('table-cbp')">✏️ Edit Table</button>
+                                <button class="btn btn-sm btn-success">✉️ Notify Club</button>
+                                <button class="btn btn-sm btn-warning">👤 Notify Account Executive</button>
+                            </div>
+                            <div class="edit-actions">
+                                <button class="btn btn-sm btn-primary" onclick="saveTable('table-cbp')">💾 Save Changes</button>
+                                <button class="btn btn-sm" onclick="toggleEditMode('table-cbp')">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="pending-table">
+                        <thead><tr><th>Item</th><th>Type</th><th>Status</th><th>Notes</th><th>Response</th></tr></thead>
+                        <tbody>
+                            <tr>
+                                <td><div class="item-name">Project quotes</div><div class="item-description">Quotes for defibrillators and seating/tables</div></td>
+                                <td><span class="type-badge type-file">📎 File Upload</span></td>
+                                <td><span class="status-indicator status-received">Received</span></td>
+                                <td><span class="notes-text">Looking to proceed with two defibrillators and seating/tables for canteen and marquee area.</span></td>
+                                <td class="response-cell">
+                                    <div class="file-uploaded">✓ 3 files uploaded</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div class="item-name">Supporting documents / images</div><div class="item-description">Evidence demonstrating the need</div></td>
+                                <td><span class="type-badge type-file">📎 File Upload</span></td>
+                                <td><span class="status-indicator status-pending">Pending</span></td>
+                                <td><span class="notes-text">Letters of support or images demonstrating the need for the outdoor furniture & marquee (e.g., a very crowded canteen with people standing, or images of existing furniture that needs replacement).</span></td>
+                                <td class="response-cell">
+                                    <div class="response-file">
+                                        <button class="file-upload-btn">📎 Upload Files</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div class="item-name">Public Liability Insurance</div><div class="item-description">Certificate of Currency</div></td>
+                                <td><span class="type-badge type-file">📎 File Upload</span></td>
+                                <td><span class="status-indicator status-pending">Pending</span></td>
+                                <td><span class="notes-text">A valid insurance certificate covering public liability of at least $5 million.</span></td>
+                                <td class="response-cell">
+                                    <div class="response-file">
+                                        <button class="file-upload-btn">📎 Upload Files</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div class="item-name">Confirm defibrillator access</div><div class="item-description">Will other clubs have access?</div></td>
+                                <td><span class="type-badge type-confirm">✓ Confirmation</span></td>
+                                <td><span class="status-indicator status-received">Received</span></td>
+                                <td><span class="notes-text">Will there be other clubs/organisations who will have access to the defib in the venue?</span></td>
+                                <td class="response-cell">
+                                    <div class="response-text">Yes - shared with Ryde Rugby and Ryde Cricket who also use the grounds</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Proceeding Grant 3 - Local Sport Defibrillator with real example data -->
             <div class="grant-card">
                 <div class="grant-card-header">
                     <div class="grant-card-info"><div class="grant-card-icon">❤️</div><div><div class="grant-card-title">Local Sport Defibrillator Grant</div><div class="grant-card-subtitle">State Government · Equipment</div></div></div>
@@ -346,10 +442,93 @@
                         <div class="grant-meta-item"><div class="grant-meta-label">Open Date</div><div class="grant-meta-value">Oct 15, 2025</div></div>
                         <div class="grant-meta-item"><div class="grant-meta-label">Close Date</div><div class="grant-meta-value">Mar 1, 2026</div></div>
                         <div class="grant-meta-item"><div class="grant-meta-label">Interest</div><div class="grant-meta-value"><span class="interest-badge interest-interested">Interested</span></div></div>
+                        <div class="grant-meta-item"><div class="grant-meta-label">Status</div><div class="grant-meta-value"><span class="status-badge status-proceeding">Proceeding</span></div></div>
+                    </div>
+                </div>
+                <div class="pending-table-container view-mode" id="table-defib">
+                    <div class="pending-table-header">
+                        <div class="pending-table-title">⚠️ Pending Information Required <span class="pending-count-badge">5 items</span></div>
+                        <div style="display:flex;gap:0.5rem">
+                            <div class="view-actions">
+                                <button class="btn btn-sm" onclick="toggleEditMode('table-defib')">✏️ Edit Table</button>
+                                <button class="btn btn-sm btn-success">✉️ Notify Club</button>
+                                <button class="btn btn-sm btn-warning">👤 Notify Account Executive</button>
+                            </div>
+                            <div class="edit-actions">
+                                <button class="btn btn-sm btn-primary" onclick="saveTable('table-defib')">💾 Save Changes</button>
+                                <button class="btn btn-sm" onclick="toggleEditMode('table-defib')">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="pending-table">
+                        <thead><tr><th>Item</th><th>Type</th><th>Status</th><th>Notes</th><th>Response</th></tr></thead>
+                        <tbody>
+                            <tr>
+                                <td><div class="item-name">SmartyGrants login details</div><div class="item-description">Account credentials for submission</div></td>
+                                <td><span class="type-badge type-text">✍️ Text Response</span></td>
+                                <td><span class="status-indicator status-received">Received</span></td>
+                                <td><span class="notes-text">Please provide your login details for the SmartyGrants account at https://sport.smartygrants.com.au/. If you don't have an account yet, you can register here.</span></td>
+                                <td class="response-cell">
+                                    <div class="response-text">Username: secretary@rydesaints.com.au<br>Password: [saved securely]</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div class="item-name">Total participants who benefit</div><div class="item-description">Include children and senior citizens</div></td>
+                                <td><span class="type-badge type-text">✍️ Text Response</span></td>
+                                <td><span class="status-indicator status-pending">Pending</span></td>
+                                <td><span class="notes-text">How many total participants in the club/organisation will be able to benefit from the defibrillator? Do you also have children and senior citizens participating?</span></td>
+                                <td class="response-cell">
+                                    <textarea class="response-input" placeholder="e.g., 289 players/volunteers..."></textarea>
+                                    <div class="response-text" style="display:none;"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div class="item-name">Previous defibrillator incidents</div><div class="item-description">Any incidents where defib was needed?</div></td>
+                                <td><span class="type-badge type-confirm">✓ Confirmation</span></td>
+                                <td><span class="status-indicator status-pending">Pending</span></td>
+                                <td><span class="notes-text">Have there been any incidences in your organisation where you needed a defibrillator but didn't have one?</span></td>
+                                <td class="response-cell">
+                                    <textarea class="response-input" placeholder="Yes/No and details..."></textarea>
+                                    <div class="response-text" style="display:none;"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div class="item-name">Primary community benefit</div><div class="item-description">Select applicable communities</div></td>
+                                <td><span class="type-badge type-select">📋 Selection</span></td>
+                                <td><span class="status-indicator status-pending">Pending</span></td>
+                                <td><span class="notes-text">What is the primary community that your project demonstrates benefit to? Options: Disadvantaged communities, CALD backgrounds, First Nations, People with disability, Regional/remote, Women and girls, LGBTQIA+, All, None</span></td>
+                                <td class="response-cell">
+                                    <textarea class="response-input" placeholder="Select from options above..."></textarea>
+                                    <div class="response-text" style="display:none;"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div class="item-name">NSW Child Safe Scheme awareness</div><div class="item-description">Compliance confirmation</div></td>
+                                <td><span class="type-badge type-confirm">✓ Confirmation</span></td>
+                                <td><span class="status-indicator status-received">Received</span></td>
+                                <td><span class="notes-text">Is your organisation aware of the NSW Child Safe Scheme and working to embed the 10 Child Safe Standards?</span></td>
+                                <td class="response-cell">
+                                    <div class="response-text">Yes - organisation is aware and actively implementing Child Safe Standards</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Lodged Grant -->
+            <div class="grant-card">
+                <div class="grant-card-header">
+                    <div class="grant-card-info"><div class="grant-card-icon">🏈</div><div><div class="grant-card-title">Telstra Footy Grants 2026</div><div class="grant-card-subtitle">Corporate · Equipment & Programs</div></div></div>
+                    <div class="grant-card-meta">
+                        <div class="grant-meta-item"><div class="grant-meta-label">Amount</div><div class="grant-meta-value">$20,000</div></div>
+                        <div class="grant-meta-item"><div class="grant-meta-label">Open Date</div><div class="grant-meta-value">Nov 1, 2025</div></div>
+                        <div class="grant-meta-item"><div class="grant-meta-label">Close Date</div><div class="grant-meta-value">Feb 1, 2026</div></div>
+                        <div class="grant-meta-item"><div class="grant-meta-label">Interest</div><div class="grant-meta-value"><span class="interest-badge interest-interested">Interested</span></div></div>
                         <div class="grant-meta-item"><div class="grant-meta-label">Status</div><div class="grant-meta-value"><span class="status-badge status-lodged">Lodged</span></div></div>
                     </div>
                 </div>
-                <div class="interest-row"><div class="interest-info"><span style="color:#059669">✓</span><span>Application submitted Jan 5, 2026 · Outcome expected Mar 15, 2026</span></div><div class="interest-actions"><button class="btn btn-sm">View Application</button></div></div>
+                <div class="interest-row"><div class="interest-info"><span style="color:#059669">✓</span><span>Application submitted Jan 25, 2026 · Outcome expected Mar 15, 2026</span></div><div class="interest-actions"><button class="btn btn-sm">View Application</button></div></div>
             </div>
 
             <!-- Won Grant - with Success Fee Invoice Status -->
@@ -396,6 +575,39 @@
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.getElementById('tab-' + tabId).classList.add('active');
             event.target.classList.add('active');
+        }
+        
+        function toggleEditMode(tableId) {
+            const container = document.getElementById(tableId);
+            if (container.classList.contains('view-mode')) {
+                container.classList.remove('view-mode');
+                container.classList.add('edit-mode');
+            } else {
+                container.classList.remove('edit-mode');
+                container.classList.add('view-mode');
+            }
+        }
+        
+        function saveTable(tableId) {
+            const container = document.getElementById(tableId);
+            // Save textarea values to response-text divs
+            container.querySelectorAll('textarea.response-input').forEach(textarea => {
+                const responseText = textarea.parentElement.querySelector('.response-text');
+                if (textarea.value.trim()) {
+                    responseText.textContent = textarea.value;
+                    responseText.style.display = 'block';
+                    // Update status to received
+                    const row = textarea.closest('tr');
+                    const statusCell = row.querySelector('.status-indicator');
+                    if (statusCell && statusCell.classList.contains('status-pending')) {
+                        statusCell.classList.remove('status-pending');
+                        statusCell.classList.add('status-received');
+                        statusCell.innerHTML = 'Received';
+                    }
+                }
+            });
+            toggleEditMode(tableId);
+            alert('Changes saved successfully!');
         }
     </script>
 </body>
