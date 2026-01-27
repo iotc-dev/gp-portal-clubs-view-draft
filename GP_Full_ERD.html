@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grant Professionals - Full Database ERD</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a2e;
+            color: #eee;
+            min-height: 100vh;
+        }
+        
+        .toolbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #16213e;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            z-index: 1000;
+            border-bottom: 2px solid #0f3460;
+        }
+        
+        .toolbar h1 {
+            font-size: 20px;
+            color: #e94560;
+        }
+        
+        .zoom-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-left: auto;
+        }
+        
+        .zoom-btn {
+            width: 50px;
+            height: 50px;
+            border: none;
+            background: #0f3460;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            font-weight: bold;
+        }
+        
+        .zoom-btn:hover { background: #e94560; }
+        
+        .zoom-level {
+            background: #0f3460;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 18px;
+            min-width: 100px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .zoom-slider {
+            width: 200px;
+            height: 10px;
+            -webkit-appearance: none;
+            background: #0f3460;
+            border-radius: 5px;
+            outline: none;
+        }
+        
+        .zoom-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            background: #e94560;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .container {
+            margin-top: 90px;
+            padding: 20px;
+            height: calc(100vh - 90px);
+            overflow: hidden;
+        }
+        
+        .diagram-wrapper {
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background: #0d1b2a;
+            border-radius: 12px;
+        }
+        
+        .diagram-content {
+            transform-origin: top left;
+            padding: 40px;
+            min-width: max-content;
+        }
+        
+        .mermaid {
+            background: transparent;
+        }
+        
+        .mermaid svg {
+            max-width: none !important;
+        }
+        
+        .instructions {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #16213e;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #aaa;
+            border: 1px solid #0f3460;
+        }
+        
+        .instructions strong { color: #e94560; }
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <h1>📊 Grant Professionals - Full Database ERD</h1>
+        
+        <div class="zoom-controls">
+            <button class="zoom-btn" onclick="zoomOut()">−</button>
+            <input type="range" class="zoom-slider" min="25" max="400" value="100" onchange="setZoom(this.value)" oninput="setZoom(this.value)">
+            <button class="zoom-btn" onclick="zoomIn()">+</button>
+            <span class="zoom-level" id="zoomLevel">100%</span>
+            <button class="zoom-btn" onclick="resetZoom()">↺</button>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="diagram-wrapper" id="diagramWrapper">
+            <div class="diagram-content" id="diagramContent">
+                <div class="mermaid">
+erDiagram
+    %% ==========================================
+    %% AUTHENTICATION & USERS
+    %% ==========================================
+    
+    GP_TEAM {
+        uuid id PK
+        uuid supabase_auth_id FK
+        string email UK
+        string full_name
+        string role
+        boolean is_active
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    CLUB_SESSIONS {
+        uuid id PK
+        uuid club_id FK
+        string session_token UK
+        timestamp expires_at
+        string ip_address
+        string user_agent
+        timestamp created_at
+    }
+
+    %% ==========================================
+    %% SUBSCRIPTION PLANS
+    %% ==========================================
+    
+    SUBSCRIPTION_PLANS {
+        uuid id PK
+        string code UK
+        string name
+        decimal price_yearly
+        text features
+        boolean is_active
+    }
+
+    %% ==========================================
+    %% CLUBS - CORE
+    %% ==========================================
+
+    CLUBS {
+        uuid id PK
+        string abn UK
+        string legal_entity_name
+        string shortened_name
+        string entity_type
+        string gst_registered
+        string dgr_status
+        string tax_concession
+        string acnc_registered
+        int code_version
+        uuid subscription_plan_id FK
+        boolean subscription_active
+        string sharepoint_folder_id
+        string sharepoint_folder_url
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    CLUB_ADDRESSES {
+        uuid id PK
+        uuid club_id FK
+        string address_type
+        string street_address
+        string suburb
+        string state
+        string postcode
+        string local_government_area
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    CLUB_CONTACTS {
+        uuid id PK
+        uuid club_id FK
+        string contact_type
+        string first_name
+        string last_name
+        string position
+        string email
+        string phone
+        boolean is_authorized_contact
+        boolean receives_notifications
+        string hubspot_contact_id
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    CLUB_PROFILES {
+        uuid id PK
+        uuid club_id FK
+        text about_organisation
+        text purpose_mission
+        text key_issues_priorities
+        string sports_activities
+        string league_affiliation
+        string facebook_url
+        string instagram_url
+        string website_url
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    CLUB_FINANCIALS {
+        uuid id PK
+        uuid club_id FK
+        boolean bank_account_in_org_name
+        string account_name_encrypted
+        string bsb_encrypted
+        string account_number_encrypted
+        boolean previously_managed_grants
+        boolean outstanding_acquittals
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    CLUB_DOCUMENT_REFS {
+        uuid id PK
+        uuid club_id FK
+        string document_type
+        string file_name
+        string sharepoint_item_id UK
+        string sharepoint_drive_id
+        string sharepoint_web_url
+        string sharepoint_download_url
+        timestamp synced_at
+        uuid uploaded_by_gp_id FK
+        uuid uploaded_by_club_id FK
+        string uploaded_by_type
+        timestamp uploaded_at
+    }
+
+    %% ==========================================
+    %% WISHLIST
+    %% ==========================================
+    
+    WISHLIST_CATEGORIES {
+        uuid id PK
+        string name
+        int display_order
+        boolean is_active
+    }
+    
+    WISHLIST_ITEMS {
+        uuid id PK
+        uuid category_id FK
+        string name
+        int display_order
+        boolean is_active
+    }
+    
+    CLUB_WISHLIST_SELECTIONS {
+        uuid id PK
+        uuid club_id FK
+        uuid wishlist_item_id FK
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    %% ==========================================
+    %% SPORTS & GRANT TYPES
+    %% ==========================================
+    
+    SPORTS {
+        uuid id PK
+        string name UK
+        int display_order
+        boolean is_active
+    }
+    
+    CLUB_SPORTS {
+        uuid id PK
+        uuid club_id FK
+        uuid sport_id FK
+        timestamp created_at
+    }
+    
+    GRANT_TYPES {
+        uuid id PK
+        string name UK
+        int display_order
+        boolean is_active
+    }
+
+    %% ==========================================
+    %% GRANTS & ELIGIBILITY
+    %% ==========================================
+    
+    GRANTS {
+        uuid id PK
+        string name
+        string provider
+        string program_name
+        uuid grant_type_id FK
+        decimal amount_min
+        decimal amount_max
+        date open_date
+        date close_date
+        string status
+        string application_url
+        text description
+        text requirements
+        boolean is_active
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    GRANT_ELIGIBLE_STATES {
+        uuid id PK
+        uuid grant_id FK
+        string state
+    }
+    
+    GRANT_ELIGIBLE_LGAS {
+        uuid id PK
+        uuid grant_id FK
+        string lga_name
+    }
+    
+    GRANT_ELIGIBLE_SPORTS {
+        uuid id PK
+        uuid grant_id FK
+        uuid sport_id FK
+    }
+    
+    GRANT_ELIGIBLE_WISHLIST {
+        uuid id PK
+        uuid grant_id FK
+        uuid wishlist_item_id FK
+    }
+    
+    GRANT_ELIGIBLE_ENTITY_TYPES {
+        uuid id PK
+        uuid grant_id FK
+        string entity_type
+    }
+
+    %% ==========================================
+    %% GRANT APPLICATIONS
+    %% ==========================================
+    
+    GRANT_APPLICATIONS {
+        uuid id PK
+        uuid club_id FK
+        uuid grant_id FK
+        string interest_status
+        timestamp interest_submitted_at
+        string application_status
+        decimal amount_requested
+        decimal amount_won
+        decimal success_fee_percentage
+        decimal success_fee_amount
+        date outcome_date
+        timestamp submitted_at
+        uuid assigned_gp_team_id FK
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    %% ==========================================
+    %% PENDING ITEMS
+    %% ==========================================
+    
+    PENDING_ITEM_TEMPLATES {
+        uuid id PK
+        string name
+        string item_type
+        text description
+        text instructions
+        boolean is_active
+        timestamp created_at
+    }
+    
+    PENDING_ITEMS {
+        uuid id PK
+        uuid grant_application_id FK
+        uuid template_id FK
+        string custom_name
+        string item_type
+        text description
+        text instructions
+        string status
+        uuid created_by_gp_id FK
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    PENDING_ITEM_RESPONSES {
+        uuid id PK
+        uuid pending_item_id FK
+        text response_text
+        string sharepoint_file_id
+        string sharepoint_file_url
+        uuid responded_by_club_id FK
+        timestamp responded_at
+        string review_status
+        text review_notes
+        uuid reviewed_by_gp_id FK
+        timestamp reviewed_at
+    }
+    
+    PENDING_ITEM_REMINDERS {
+        uuid id PK
+        uuid pending_item_id FK
+        uuid sent_by_gp_id FK
+        string reminder_type
+        text message
+        timestamp sent_at
+    }
+
+    %% ==========================================
+    %% INVOICES
+    %% ==========================================
+    
+    INVOICES {
+        uuid id PK
+        string invoice_number UK
+        uuid club_id FK
+        uuid grant_application_id FK
+        decimal amount
+        string status
+        date invoice_date
+        date due_date
+        date paid_date
+        string xero_invoice_id
+        uuid created_by_gp_id FK
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    %% ==========================================
+    %% ACTIVITY LOGS
+    %% ==========================================
+    
+    ACTIVITY_LOGS {
+        uuid id PK
+        string entity_type
+        uuid entity_id
+        string action
+        jsonb old_values
+        jsonb new_values
+        uuid actor_gp_id FK
+        uuid actor_club_id FK
+        string actor_type
+        string ip_address
+        timestamp created_at
+    }
+
+    %% ==========================================
+    %% RELATIONSHIPS
+    %% ==========================================
+    
+    SUBSCRIPTION_PLANS ||--o{ CLUBS : subscribes
+    
+    CLUBS ||--o{ CLUB_SESSIONS : has
+    CLUBS ||--o{ CLUB_ADDRESSES : has
+    CLUBS ||--o{ CLUB_CONTACTS : has
+    CLUBS ||--|| CLUB_PROFILES : has
+    CLUBS ||--|| CLUB_FINANCIALS : has
+    CLUBS ||--o{ CLUB_DOCUMENT_REFS : has
+    CLUBS ||--o{ CLUB_WISHLIST_SELECTIONS : selects
+    CLUBS ||--o{ GRANT_APPLICATIONS : submits
+    CLUBS ||--o{ INVOICES : receives
+    CLUBS ||--o{ PENDING_ITEM_RESPONSES : responds
+    CLUBS ||--o{ ACTIVITY_LOGS : generates
+    
+    WISHLIST_CATEGORIES ||--o{ WISHLIST_ITEMS : contains
+    WISHLIST_ITEMS ||--o{ CLUB_WISHLIST_SELECTIONS : selected_in
+    WISHLIST_ITEMS ||--o{ GRANT_ELIGIBLE_WISHLIST : matched_by
+    
+    SPORTS ||--o{ CLUB_SPORTS : played_by
+    SPORTS ||--o{ GRANT_ELIGIBLE_SPORTS : targeted_by
+    CLUBS ||--o{ CLUB_SPORTS : plays
+    
+    GRANT_TYPES ||--o{ GRANTS : categorizes
+    
+    GRANTS ||--o{ GRANT_APPLICATIONS : has
+    GRANTS ||--o{ GRANT_ELIGIBLE_STATES : restricted_to
+    GRANTS ||--o{ GRANT_ELIGIBLE_LGAS : restricted_to
+    GRANTS ||--o{ GRANT_ELIGIBLE_SPORTS : restricted_to
+    GRANTS ||--o{ GRANT_ELIGIBLE_WISHLIST : funds
+    GRANTS ||--o{ GRANT_ELIGIBLE_ENTITY_TYPES : restricted_to
+    
+    GRANT_APPLICATIONS ||--o{ PENDING_ITEMS : has
+    GRANT_APPLICATIONS ||--o| INVOICES : generates
+    
+    GP_TEAM ||--o{ GRANT_APPLICATIONS : assigned_to
+    GP_TEAM ||--o{ PENDING_ITEMS : creates
+    GP_TEAM ||--o{ PENDING_ITEM_RESPONSES : reviews
+    GP_TEAM ||--o{ PENDING_ITEM_REMINDERS : sends
+    GP_TEAM ||--o{ INVOICES : creates
+    GP_TEAM ||--o{ CLUB_DOCUMENT_REFS : uploads
+    GP_TEAM ||--o{ ACTIVITY_LOGS : performs
+    
+    PENDING_ITEM_TEMPLATES ||--o{ PENDING_ITEMS : used_by
+    PENDING_ITEMS ||--o{ PENDING_ITEM_RESPONSES : receives
+    PENDING_ITEMS ||--o{ PENDING_ITEM_REMINDERS : has
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="instructions">
+        <strong>Zoom:</strong> Slider, +/− buttons, or Ctrl+Scroll &nbsp;|&nbsp; <strong>Pan:</strong> Click and drag
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#e94560',
+                primaryTextColor: '#fff',
+                primaryBorderColor: '#e94560',
+                lineColor: '#4a9fff',
+                secondaryColor: '#16213e',
+                tertiaryColor: '#0f3460',
+                background: '#0d1b2a',
+                mainBkg: '#16213e',
+                secondBkg: '#0f3460',
+                border1: '#e94560',
+                border2: '#4a9fff',
+                arrowheadColor: '#4a9fff',
+                fontFamily: 'ui-sans-serif, system-ui, sans-serif',
+                fontSize: '16px',
+                relationLabelBackground: '#16213e',
+                entityBorder: '#e94560',
+                attributeBackgroundColorOdd: '#1a2744',
+                attributeBackgroundColorEven: '#16213e'
+            },
+            er: {
+                layoutDirection: 'TB',
+                minEntityWidth: 200,
+                minEntityHeight: 50,
+                entityPadding: 20,
+                useMaxWidth: false
+            }
+        });
+
+        let currentZoom = 100;
+        const diagramContent = document.getElementById('diagramContent');
+        const zoomLevelDisplay = document.getElementById('zoomLevel');
+        const slider = document.querySelector('.zoom-slider');
+
+        function setZoom(value) {
+            currentZoom = parseInt(value);
+            diagramContent.style.transform = `scale(${currentZoom / 100})`;
+            zoomLevelDisplay.textContent = currentZoom + '%';
+            slider.value = currentZoom;
+        }
+
+        function zoomIn() {
+            setZoom(Math.min(currentZoom + 25, 400));
+        }
+
+        function zoomOut() {
+            setZoom(Math.max(currentZoom - 25, 25));
+        }
+
+        function resetZoom() {
+            setZoom(100);
+        }
+
+        // Mouse wheel zoom with Ctrl
+        document.getElementById('diagramWrapper').addEventListener('wheel', function(e) {
+            if (e.ctrlKey) {
+                e.preventDefault();
+                if (e.deltaY < 0) {
+                    zoomIn();
+                } else {
+                    zoomOut();
+                }
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === '+' || e.key === '=') zoomIn();
+            if (e.key === '-') zoomOut();
+            if (e.key === '0') resetZoom();
+        });
+    </script>
+</body>
+</html>
