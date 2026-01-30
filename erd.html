@@ -201,11 +201,12 @@ erDiagram
         string dgr_status
         string tax_concession
         string acnc_registered
+        boolean has_gaming_machines
+        string land_ownership
         int code_version
         uuid subscription_plan_id FK
         boolean subscription_active
-        string sharepoint_folder_id
-        string sharepoint_folder_url
+        string folder_url
         timestamp created_at
         timestamp updated_at
     }
@@ -272,11 +273,7 @@ erDiagram
         uuid club_id FK
         string document_type
         string file_name
-        string sharepoint_item_id UK
-        string sharepoint_drive_id
-        string sharepoint_web_url
-        string sharepoint_download_url
-        timestamp synced_at
+        string file_url
         uuid uploaded_by_gp_id FK
         uuid uploaded_by_club_id FK
         string uploaded_by_type
@@ -442,8 +439,7 @@ erDiagram
         uuid id PK
         uuid pending_item_id FK
         text response_text
-        string sharepoint_file_id
-        string sharepoint_file_url
+        string file_url
         uuid responded_by_club_id FK
         timestamp responded_at
         string review_status
